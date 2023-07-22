@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">conteoInventario</string>
+    <string name="server">SERVIDOR/IP</string>
+    <string name="puerto">PUERTO</string>
+    <string name="logo_sismantec">Logo_Sismantec</string>
+    <string name="titulo_conexion">CONEXIÓN SERVIDOR</string>
+    <string name="btn_conectar">CONECTAR</string>
+</resources>
