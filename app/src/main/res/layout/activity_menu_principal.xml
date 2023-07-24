@@ -9,16 +9,50 @@
     android:background="@drawable/fondo"
     tools:context=".Menu_principal">
 
-    <ImageView
-        android:id="@+id/imgServer"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:src="@drawable/server"
-        android:layout_gravity="top|start"
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_gravity="top"
         android:layout_marginStart="@dimen/margin_16dp"
-        android:layout_marginTop="-100dp"
+        android:layout_marginEnd="@dimen/margin_16dp"
         android:layout_marginBottom="@dimen/margin_32dp"
-        android:elevation="10dp"/>
+        android:layout_marginTop="-32dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <ImageView
+                android:id="@+id/imgServer"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="@dimen/margin_4dp"
+                android:layout_marginEnd="@dimen/margin_4dp"
+                android:src="@drawable/server"
+                android:elevation="10dp"/>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="@dimen/margin_4dp"
+                android:orientation="vertical"
+                android:gravity="center_vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/servidor_conectado"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="@color/colorHint"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ejemplo_server"
+                    android:textSize="16sp"
+                    android:textColor="@color/colorHint"/>
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -41,7 +75,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="MENÚ PRINCIPAL"
+                    android:text="@string/men_principal"
                     android:layout_marginTop="@dimen/margin_8dp"
                     android:layout_marginStart="@dimen/margin_32dp"
                     android:textAlignment="textStart"

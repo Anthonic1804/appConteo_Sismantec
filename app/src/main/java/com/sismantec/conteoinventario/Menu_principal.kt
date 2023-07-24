@@ -13,7 +13,10 @@ class Menu_principal : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMenuPrincipalBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
 
+    override fun onStart() {
+        super.onStart()
 
         binding.imgServer.setOnClickListener {
             val intent = Intent(this@Menu_principal, MainActivity::class.java)
@@ -22,5 +25,10 @@ class Menu_principal : AppCompatActivity() {
             finish()
         }
 
+        binding.nuevoConteo.setOnClickListener {
+            val intent = Intent(this@Menu_principal, Nuevo_conteo::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 }
