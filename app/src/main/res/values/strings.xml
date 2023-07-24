@@ -1,8 +1,17 @@
 <resources>
-    <string name="app_name">conteoInventario</string>
+    <string name="app_name">Conteo Inventario</string>
     <string name="server">SERVIDOR/IP</string>
     <string name="puerto">PUERTO</string>
     <string name="logo_sismantec">Logo_Sismantec</string>
     <string name="titulo_conexion">CONEXIÓN SERVIDOR</string>
     <string name="btn_conectar">CONECTAR</string>
+    <string name="ingresar">INGRESAR</string>
+    <string name="contrasena">CONTRASENA</string>
+    <string name="usuario">USUARIO</string>
+    <string name="iniciar_sesion">INICIAR SESIÓN</string>
+    <string name="sincronizar_inventario">SINCRONIZAR INVENTARIO</string>
+    <string name="nuevo_conteo">NUEVO CONTEO</string>
+    <string name="cancelar_proceso">CANCELAR PROCESO</string>
+    <string name="reconectar">RECONECTAR</string>
+    <string name="proceso_cancelado">PROCESO CANCELADO</string>
 </resources>

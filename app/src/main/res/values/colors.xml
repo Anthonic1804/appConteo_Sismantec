@@ -5,4 +5,6 @@
     <color name="colorHint">#7E7E7E</color>
     <color name="background">#F4F4F4</color>
     <color name="colorPrimary">#066BBB</color>
+    <color name="colorRojo">#A80707</color>
+    <color name="colorVerde">#1F9A24</color>
 </resources>
