@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    android:background="@color/background"
+    android:background="@drawable/fondo"
     tools:context=".MainActivity">
 
     <androidx.cardview.widget.CardView
@@ -64,7 +64,7 @@
                     android:layout_marginBottom="@dimen/margin_4dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtip"
+                        android:id="@+id/txtIp"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -84,7 +84,7 @@
                     android:layout_marginBottom="@dimen/margin_4dp">
 
                     <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/txtpuerto"
+                        android:id="@+id/txtPuerto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
@@ -93,6 +93,7 @@
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <Button
+                    android:id="@+id/btnConectar"
                     android:layout_width="match_parent"
                     android:layout_height="55dp"
                     android:layout_marginTop="@dimen/margin_4dp"
@@ -102,10 +103,32 @@
                     app:backgroundTint="@color/colorPrimary"
                     android:textColor="@color/white"/>
 
+                <Button
+                    android:id="@+id/btnCancelar"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    android:layout_marginTop="@dimen/margin_4dp"
+                    android:text="@string/cancelar_proceso"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/colorRojo"
+                    android:textColor="@color/white"/>
+
             </LinearLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+    <TextView
+        android:id="@+id/txtDesigned"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin_16dp"
+        android:layout_marginEnd="@dimen/margin_16dp"
+        android:text="Designed by ®Sismantec 2023"
+        android:textAlignment="center"
+        android:textColor="@color/colorHint"/>
 
 </LinearLayout>
