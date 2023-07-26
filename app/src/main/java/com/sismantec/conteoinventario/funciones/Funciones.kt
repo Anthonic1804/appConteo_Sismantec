@@ -1,12 +1,13 @@
-package controladores
+package com.sismantec.conteoinventario.funciones
 
 import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.os.Build
 import androidx.annotation.RequiresPermission
 import org.json.JSONObject
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
 import java.net.HttpURLConnection
 import java.net.URL
@@ -50,6 +51,28 @@ class Funciones {
     }
     //FIN FUNCION PARA VERIFICAR LA CONEXION A INTERNET
 
+    //OBTENIENDO LA CONEXION DE RETROFIT
+    fun getRetrofit(url:String): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(url)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+    }
+
+    //FUNCION PARA OBTENER EL SERVIDOR
+    fun getServidor(ip: String, puerto: String): String {
+        return "http://${ip}:${puerto}/"
+    }
+
+    //FUNCION PARA OBTENER FECHA
+    fun getDateTime(): String {
+        val dateFormat = SimpleDateFormat(
+            "yyyy-MM-dd", Locale.getDefault()
+        )
+        val date = Date()
+        return dateFormat.format(date)
+    }
+
     fun validateJsonIsNullInt(json: JSONObject, campo: String): Int {
         return if (json.isNull(campo)) {
             0
@@ -74,11 +97,4 @@ class Funciones {
         }
     }
 
-    fun getDateTime(): String {
-        val dateFormat = SimpleDateFormat(
-            "yyyy-MM-dd", Locale.getDefault()
-        )
-        val date = Date()
-        return dateFormat.format(date)
-    }
 }

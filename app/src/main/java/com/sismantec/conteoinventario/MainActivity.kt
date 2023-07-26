@@ -6,11 +6,11 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sismantec.conteoinventario.databinding.ActivityMainBinding
+import com.sismantec.conteoinventario.funciones.Funciones
 import controladores.ConexionController
-import controladores.Funciones
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -19,10 +19,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var funciones: Funciones
     private lateinit var conexionController: ConexionController
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         from = intent.getStringExtra("from").toString()
         funciones = Funciones()
         conexionController = ConexionController()
@@ -40,17 +42,14 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onStart() {
         super.onStart()
 
         binding.btnConectar.setOnClickListener {
             if(conexionController.validarCampos(binding.txtIp.text.toString(), binding.txtPuerto.text.toString())){
-                GlobalScope.async {
+                CoroutineScope(Dispatchers.IO).launch {
                     if(funciones.isInternetReachable(this@MainActivity)){
-                        val intent = Intent(this@MainActivity, Login::class.java)
-                        startActivity(intent)
-                        finish()
+                        conexionController.conectarServidor(binding.txtIp.text.toString(), binding.txtPuerto.text.toString(), this@MainActivity)
                     }else{
                         runOnUiThread {
                             Toast.makeText(this@MainActivity, "NO TIENES INTERNET", Toast.LENGTH_SHORT).show()
@@ -70,6 +69,11 @@ class MainActivity : AppCompatActivity() {
             finish()
         }
 
+    }
+    fun Login(){
+        val intent = Intent(this@MainActivity, Login::class.java)
+        startActivity(intent)
+        finish()
     }
 
 }
