@@ -1,6 +1,8 @@
 package com.sismantec.conteoinventario
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -18,7 +20,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var from: String
     private lateinit var funciones: Funciones
     private lateinit var conexionController: ConexionController
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +45,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-
         binding.btnConectar.setOnClickListener {
             if(conexionController.validarCampos(binding.txtIp.text.toString(), binding.txtPuerto.text.toString())){
                 CoroutineScope(Dispatchers.IO).launch {

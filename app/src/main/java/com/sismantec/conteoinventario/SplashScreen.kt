@@ -12,18 +12,9 @@ import android.view.WindowManager
 @Suppress("DEPRECATION")
 class SplashScreen : AppCompatActivity() {
 
-    private var preferencias: SharedPreferences? = null
-    private val instancia = "CONFIG_SERVIDOR"
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash_screen)
-
-        preferencias = getSharedPreferences(instancia, Context.MODE_PRIVATE)
-        val servidor = preferencias!!.getString("servidor", "").toString()
-
-        println("SERVIDOR: $servidor")
-
 
         window.setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -31,15 +22,9 @@ class SplashScreen : AppCompatActivity() {
         )
 
         Handler(Looper.getMainLooper()).postDelayed({
-            if(servidor == ""){
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
-            }else{
-                val intent = Intent(this, Login::class.java)
-                startActivity(intent)
-                finish()
-            }
         }, 5000)
 
     }

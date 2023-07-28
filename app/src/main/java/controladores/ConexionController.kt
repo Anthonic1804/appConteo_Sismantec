@@ -1,7 +1,6 @@
 package controladores
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.widget.Toast
 import com.sismantec.conteoinventario.apiservices.APIService
 import com.sismantec.conteoinventario.funciones.Funciones
@@ -15,7 +14,6 @@ import retrofit2.Response
 class ConexionController {
 
     private var funciones = Funciones()
-    private var preferencias: SharedPreferences? = null
 
     //FUNCION PARA VALIDAR CAMPOS DE CONEXION
     fun validarCampos(ip: String, puerto: String): Boolean{
@@ -38,9 +36,6 @@ class ConexionController {
                         val respuesta = call.body()
                         if(respuesta?.respuesta == "CONEXION_EXITOSA"){
                             Toast.makeText(context, "CONEXION EXITOSA SERVIDOR: $url", Toast.LENGTH_SHORT).show()
-                            //val editor = preferencias!!.edit()
-                            //editor!!.putString("servidor", url)
-                            //editor.apply()
                         }else{
                             Toast.makeText(context, "ERROR DE CONEXION", Toast.LENGTH_SHORT).show()
                         }
