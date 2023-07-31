@@ -60,7 +60,7 @@ class Funciones {
     }
 
     //FUNCION PARA OBTENER EL SERVIDOR
-    fun getServidor(ip: String, puerto: String): String {
+    fun getServidor(ip: String?, puerto: String?): String {
         return "http://${ip}:${puerto}/"
     }
 

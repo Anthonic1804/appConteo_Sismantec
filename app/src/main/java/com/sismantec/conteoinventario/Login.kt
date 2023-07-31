@@ -1,13 +1,16 @@
 package com.sismantec.conteoinventario
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.sismantec.conteoinventario.databinding.ActivityLoginBinding
+import controladores.LoginController
 
 class Login : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
+    private var controller = LoginController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -15,15 +18,16 @@ class Login : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.btnIngresar.setOnClickListener {
-            if(binding.txtUsuario.text.toString() == "ADMIN"){
-                val intent = Intent(this@Login, Menu_principal::class.java)
-                startActivity(intent)
-                finish()
-            }else{
-                val intent = Intent(this@Login, MainActivity::class.java)
-                startActivity(intent)
-                finish()
+            controller.iniciarSesion(this@Login, binding.txtUsuario.text.toString(), binding.txtPass.text.toString()){ conexionExitosa ->
+                if(conexionExitosa){
+                    menuPrincipal()
+                }
             }
         }
+    }
+    private fun menuPrincipal(){
+        val intent = Intent(this@Login, Menu_principal::class.java)
+        startActivity(intent)
+        finish()
     }
 }

@@ -2,7 +2,6 @@ package com.sismantec.conteoinventario
 
 import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
@@ -30,11 +29,19 @@ class MainActivity : AppCompatActivity() {
         funciones = Funciones()
         conexionController = ConexionController()
 
+        val prefs = getSharedPreferences("serverData", Context.MODE_PRIVATE)
+        val ip = prefs.getString("ip",null)
+        val puerto = prefs.getString("puerto", null)
+
         when(from){
             "menu" -> {
-                binding.btnCancelar.visibility = View.VISIBLE
-                binding.btnConectar.text = getString(R.string.reconectar)
-                binding.txtDesigned.visibility = View.GONE
+                with(binding){
+                    txtIp.setText(ip.toString())
+                    txtPuerto.setText(puerto.toString())
+                    btnCancelar.visibility = View.VISIBLE
+                    btnConectar.text = getString(R.string.reconectar)
+                    txtDesigned.visibility = View.GONE
+                }
             }
             else -> {
                 binding.btnCancelar.visibility = View.GONE
@@ -49,7 +56,12 @@ class MainActivity : AppCompatActivity() {
             if(conexionController.validarCampos(binding.txtIp.text.toString(), binding.txtPuerto.text.toString())){
                 CoroutineScope(Dispatchers.IO).launch {
                     if(funciones.isInternetReachable(this@MainActivity)){
-                        conexionController.conectarServidor(binding.txtIp.text.toString(), binding.txtPuerto.text.toString(), this@MainActivity)
+                        conexionController.conectarServidor(binding.txtIp.text.toString(), binding.txtPuerto.text.toString(), this@MainActivity){ conexionExitosa ->
+                            if(conexionExitosa){
+                                almacenarServidor(binding.txtIp.text.toString(), binding.txtPuerto.text.toString())
+                                iniciarSesion()
+                            }
+                        }
                     }else{
                         runOnUiThread {
                             Toast.makeText(this@MainActivity, "NO TIENES INTERNET", Toast.LENGTH_SHORT).show()
@@ -63,17 +75,27 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnCancelar.setOnClickListener {
             Toast.makeText(this@MainActivity, getString(R.string.proceso_cancelado), Toast.LENGTH_SHORT).show()
-
-            val intent = Intent(this@MainActivity, Menu_principal::class.java)
-            startActivity(intent)
-            finish()
+            cancelarProceso()
         }
 
     }
-    fun Login(){
+    private fun cancelarProceso(){
+        val intent = Intent(this@MainActivity, Menu_principal::class.java)
+        startActivity(intent)
+        finish()
+    }
+    private fun iniciarSesion(){
         val intent = Intent(this@MainActivity, Login::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun almacenarServidor(ip: String, puerto:String){
+        val prefs = getSharedPreferences("serverData", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.putString("ip", ip)
+        editor.putString("puerto", puerto)
+        editor.apply()
     }
 
 }

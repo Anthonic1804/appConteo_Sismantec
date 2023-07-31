@@ -11,7 +11,7 @@
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="80dp"
         android:layout_gravity="top"
         android:layout_marginStart="@dimen/margin_16dp"
         android:layout_marginEnd="@dimen/margin_16dp"
@@ -43,13 +43,21 @@
                     android:text="@string/servidor_conectado"
                     android:textStyle="bold"
                     android:textSize="18sp"
-                    android:textColor="@color/colorHint"/>
+                    android:textColor="@color/colorRojo"/>
                 <TextView
+                    android:id="@+id/lblServidor"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/ejemplo_server"
                     android:textSize="16sp"
                     android:textColor="@color/colorHint"/>
+                <TextView
+                    android:id="@+id/lblEmpleado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="EMPLEADO: ADOLFO HERNANDEZ"
+                    android:textSize="14sp"
+                    android:textColor="@color/colorRojo"/>
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

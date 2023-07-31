@@ -25,30 +25,37 @@ class ConexionController {
     }
 
     //FUNCION PARA CONECTAR AL SERVIDOR
-    fun conectarServidor(ip: String, puerto: String, context: Context){
+    fun conectarServidor(ip: String, puerto: String, context: Context, callback: (Boolean) -> Unit) {
         val url = funciones.getServidor(ip, puerto)
+
         CoroutineScope(Dispatchers.IO).launch {
-            try{
+            try {
                 val call: Response<ResponseConexion> = funciones.getRetrofit(url).create(APIService::class.java)
-                    .obtenerConexion("conexion")
+                    .obtenerConexion("Conexion/conexion")
+
                 withContext(Dispatchers.Main) {
                     if (call.isSuccessful) {
                         val respuesta = call.body()
-                        if(respuesta?.respuesta == "CONEXION_EXITOSA"){
+                        if (respuesta?.respuesta == "CONEXION_EXITOSA") {
                             Toast.makeText(context, "CONEXION EXITOSA SERVIDOR: $url", Toast.LENGTH_SHORT).show()
-                        }else{
+                            callback(true)
+                        } else {
                             Toast.makeText(context, "ERROR DE CONEXION", Toast.LENGTH_SHORT).show()
+                            callback(false)
                         }
                     } else {
                         Toast.makeText(context, "ERROR EN LA RESPUESTA DEL SERVIDOR", Toast.LENGTH_SHORT).show()
+                        callback(false)
                     }
                 }
-            }catch (e: Exception){
+            } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
                     Toast.makeText(context, "ERROR: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+                callback(false)
             }
         }
     }
+
 
 }
