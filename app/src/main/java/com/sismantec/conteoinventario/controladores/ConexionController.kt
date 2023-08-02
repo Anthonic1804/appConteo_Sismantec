@@ -1,4 +1,4 @@
-package controladores
+package com.sismantec.conteoinventario.controladores
 
 import android.content.Context
 import android.widget.Toast
@@ -35,14 +35,8 @@ class ConexionController {
 
                 withContext(Dispatchers.Main) {
                     if (call.isSuccessful) {
-                        val respuesta = call.body()
-                        if (respuesta?.respuesta == "CONEXION_EXITOSA") {
-                            Toast.makeText(context, "CONEXION EXITOSA SERVIDOR: $url", Toast.LENGTH_SHORT).show()
-                            callback(true)
-                        } else {
-                            Toast.makeText(context, "ERROR DE CONEXION", Toast.LENGTH_SHORT).show()
-                            callback(false)
-                        }
+                        Toast.makeText(context, "CONEXION EXITOSA SERVIDOR: $url", Toast.LENGTH_SHORT).show()
+                        callback(true)
                     } else {
                         Toast.makeText(context, "ERROR EN LA RESPUESTA DEL SERVIDOR", Toast.LENGTH_SHORT).show()
                         callback(false)

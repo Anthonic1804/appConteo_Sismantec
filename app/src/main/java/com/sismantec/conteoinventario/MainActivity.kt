@@ -8,7 +8,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sismantec.conteoinventario.databinding.ActivityMainBinding
 import com.sismantec.conteoinventario.funciones.Funciones
-import controladores.ConexionController
+import com.sismantec.conteoinventario.controladores.ConexionController
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -29,15 +29,11 @@ class MainActivity : AppCompatActivity() {
         funciones = Funciones()
         conexionController = ConexionController()
 
-        val prefs = getSharedPreferences("serverData", Context.MODE_PRIVATE)
-        val ip = prefs.getString("ip",null)
-        val puerto = prefs.getString("puerto", null)
-
         when(from){
             "menu" -> {
                 with(binding){
-                    txtIp.setText(ip.toString())
-                    txtPuerto.setText(puerto.toString())
+                    txtIp.setText(funciones.getPreferences(this@MainActivity).ip.toString())
+                    txtPuerto.setText(funciones.getPreferences(this@MainActivity).puerto.toString())
                     btnCancelar.visibility = View.VISIBLE
                     btnConectar.text = getString(R.string.reconectar)
                     txtDesigned.visibility = View.GONE

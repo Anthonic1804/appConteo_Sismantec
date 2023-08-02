@@ -5,7 +5,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.sismantec.conteoinventario.databinding.ActivityLoginBinding
-import controladores.LoginController
+import com.sismantec.conteoinventario.controladores.LoginController
 
 class Login : AppCompatActivity() {
 

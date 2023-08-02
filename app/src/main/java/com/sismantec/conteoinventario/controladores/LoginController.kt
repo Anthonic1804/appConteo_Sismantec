@@ -1,4 +1,4 @@
-package controladores
+package com.sismantec.conteoinventario.controladores
 
 import android.content.Context
 import android.widget.Toast
@@ -12,15 +12,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
 
-
 class LoginController {
     private var funciones = Funciones()
 
     fun iniciarSesion(context: Context, usuario: String, clave: String, callback: (Boolean) -> Unit) {
-        val prefs = context.getSharedPreferences("serverData", Context.MODE_PRIVATE)
-        val ip = prefs.getString("ip", null)
-        val puerto = prefs.getString("puerto", null)
-        val url = funciones.getServidor(ip, puerto)
+        val prefs = funciones.getPreferences(context)
+        val url = funciones.getServidor(prefs.ip, prefs.puerto)
 
         val credenciales = LoginJSON(
             usuario.uppercase(),
@@ -36,7 +33,8 @@ class LoginController {
                     if (response.isSuccessful) {
                         val respuesta = response.body()
 
-                        val editor = prefs.edit()
+                        val prefs2 = context.getSharedPreferences("serverData", Context.MODE_PRIVATE)
+                        val editor = prefs2.edit()
                         editor.putString("empleado", respuesta?.empleado.toString())
                         editor.putInt("idEmpleado", respuesta?.id.toString().toInt())
                         editor.apply()

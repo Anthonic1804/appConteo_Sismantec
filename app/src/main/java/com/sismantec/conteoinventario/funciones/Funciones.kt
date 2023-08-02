@@ -15,7 +15,16 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class Funciones {
+class Funciones{
+
+    //DATACLASE PARA OBTENER LAS PREFERENCIAS ALMACENADAS
+    data class ValoresPrefs(
+        val ip: String?,
+        val puerto: String?,
+        val empleado: String?,
+        val idEmpleado: Int?
+    )
+
     //FUNCION PARA VERIFICAR LA CONEXION A INTERNET
     @RequiresPermission(anyOf = [Manifest.permission.ACCESS_NETWORK_STATE, Manifest.permission.INTERNET])
     fun isInternetReachable(context: Context): Boolean {
@@ -62,6 +71,19 @@ class Funciones {
     //FUNCION PARA OBTENER EL SERVIDOR
     fun getServidor(ip: String?, puerto: String?): String {
         return "http://${ip}:${puerto}/"
+    }
+
+    //FUNCION PARA OBTERNER LAS PREFERENCIAS ALMACENADAS
+    fun getPreferences(context: Context): ValoresPrefs{
+
+        val prefs = context.getSharedPreferences("serverData", Context.MODE_PRIVATE)
+        val ip = prefs.getString("ip", null)
+        val puerto = prefs.getString("puerto", null)
+        val empleado = prefs.getString("empleado", null)
+        val idEmpleado = prefs.getInt("idEmpleado", 0)
+
+        return ValoresPrefs(ip, puerto, empleado, idEmpleado)
+
     }
 
     //FUNCION PARA OBTENER FECHA
