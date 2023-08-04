@@ -5,6 +5,7 @@ import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import androidx.annotation.RequiresPermission
+import com.sismantec.conteoinventario.database.DataBaseConteo
 import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -73,6 +74,11 @@ class Funciones{
         return "http://${ip}:${puerto}/"
     }
 
+    //FUNCION PARA OBTENER LA INSTANCIA DE LA BASE DE DATOS
+    fun getDataBase(context: Context): DataBaseConteo {
+        return DataBaseConteo(context)
+    }
+
     //FUNCION PARA OBTERNER LAS PREFERENCIAS ALMACENADAS
     fun getPreferences(context: Context): ValoresPrefs{
 
@@ -94,29 +100,4 @@ class Funciones{
         val date = Date()
         return dateFormat.format(date)
     }
-
-    fun validateJsonIsNullInt(json: JSONObject, campo: String): Int {
-        return if (json.isNull(campo)) {
-            0
-        } else {
-            json.getInt(campo)
-        }
-    }
-
-    fun validateJsonIsNullFloat(json: JSONObject, campo: String): Float {
-        return if (json.isNull(campo)) {
-            0.toFloat()
-        } else {
-            json.getString(campo).toFloat()
-        }
-    }
-
-    fun validateJsonIsnullString(json: JSONObject, campo: String): String {
-        return if (json.isNull(campo)) {
-            ""
-        } else {
-            json.getString(campo).trim()
-        }
-    }
-
 }

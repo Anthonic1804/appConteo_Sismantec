@@ -1,15 +1,11 @@
 package com.sismantec.conteoinventario
 
-import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityMenuPrincipalBinding
 import com.sismantec.conteoinventario.funciones.Funciones
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 class Menu_principal : AppCompatActivity() {
 
