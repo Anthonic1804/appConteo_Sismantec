@@ -4,9 +4,14 @@ import android.Manifest
 import android.content.Context
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.view.Gravity
+import android.view.LayoutInflater
+import android.view.View
+import android.widget.TextView
+import android.widget.Toast
 import androidx.annotation.RequiresPermission
+import com.sismantec.conteoinventario.R
 import com.sismantec.conteoinventario.database.DataBaseConteo
-import org.json.JSONObject
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.io.IOException
@@ -99,5 +104,28 @@ class Funciones{
         )
         val date = Date()
         return dateFormat.format(date)
+    }
+
+    //FUNCION TOAST ACEPTADO
+    fun toastMensaje(context: Context, msj: String, tipo: Int){
+        val inflater = LayoutInflater.from(context)
+        var layout: View? = null
+        layout = when(tipo){
+            0 -> {
+                inflater.inflate(R.layout.toast_error, null)
+            }else ->{
+                inflater.inflate(R.layout.toast_correcto, null)
+            }
+        }
+
+        val txtMensaje = layout.findViewById<TextView>(R.id.tvMensaje)
+        txtMensaje.text = msj
+
+        val toast = Toast(context)
+        toast.duration = Toast.LENGTH_LONG
+        toast.view= layout
+        toast.setGravity(Gravity.BOTTOM, 0,100)
+        toast.show()
+
     }
 }

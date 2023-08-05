@@ -60,17 +60,17 @@ class MainActivity : AppCompatActivity() {
                         }
                     }else{
                         runOnUiThread {
-                            Toast.makeText(this@MainActivity, "NO TIENES INTERNET", Toast.LENGTH_SHORT).show()
+                            funciones.toastMensaje(this@MainActivity, "NO TIENES INTERNET", 0)
                         }
                     }
                 }
             }else{
-                Toast.makeText(this@MainActivity, "LOS CAMPOS SON REQUERIDOS", Toast.LENGTH_LONG).show()
+                funciones.toastMensaje(this@MainActivity, "LOS CAMPOS SON REQUERIDOS", 0)
             }
         }
 
         binding.btnCancelar.setOnClickListener {
-            Toast.makeText(this@MainActivity, getString(R.string.proceso_cancelado), Toast.LENGTH_SHORT).show()
+            funciones.toastMensaje(this@MainActivity, getString(R.string.proceso_cancelado), 0)
             cancelarProceso()
         }
 

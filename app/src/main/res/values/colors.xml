@@ -6,5 +6,7 @@
     <color name="background">#F4F4F4</color>
     <color name="colorPrimary">#066BBB</color>
     <color name="colorRojo">#A80707</color>
+    <color name="colorError">#FFCACA</color>
     <color name="colorVerde">#1F9A24</color>
+    <color name="toastAccept">#C0EEC2</color>
 </resources>

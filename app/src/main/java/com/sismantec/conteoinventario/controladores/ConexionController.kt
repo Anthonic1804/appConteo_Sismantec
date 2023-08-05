@@ -35,10 +35,10 @@ class ConexionController {
 
                 withContext(Dispatchers.Main) {
                     if (call.isSuccessful) {
-                        Toast.makeText(context, "CONEXION EXITOSA SERVIDOR: $url", Toast.LENGTH_SHORT).show()
+                        funciones.toastMensaje(context, "CONEXION EXITOSA SERVIDOR", 1)
                         callback(true)
                     } else {
-                        Toast.makeText(context, "ERROR EN LA RESPUESTA DEL SERVIDOR", Toast.LENGTH_SHORT).show()
+                        funciones.toastMensaje(context, "ERROR EN LA RESPUESTA DEL SERVIDOR", 0)
                         callback(false)
                     }
                 }

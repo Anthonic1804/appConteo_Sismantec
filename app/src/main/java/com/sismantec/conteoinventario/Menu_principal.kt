@@ -2,10 +2,14 @@ package com.sismantec.conteoinventario
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityMenuPrincipalBinding
 import com.sismantec.conteoinventario.funciones.Funciones
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class Menu_principal : AppCompatActivity() {
 
@@ -44,7 +48,15 @@ class Menu_principal : AppCompatActivity() {
         }
 
         binding.loadInventario.setOnClickListener {
-            controlador.obtenerBodegas(this@Menu_principal)
+            CoroutineScope(Dispatchers.IO).launch {
+                if(funciones.isInternetReachable(this@Menu_principal)){
+                    controlador.obtenerBodegas(this@Menu_principal)
+                }else{
+                    runOnUiThread {
+                        funciones.toastMensaje(this@Menu_principal, "NO TIENES INTERNET", 0)
+                    }
+                }
+            }
         }
     }
 }

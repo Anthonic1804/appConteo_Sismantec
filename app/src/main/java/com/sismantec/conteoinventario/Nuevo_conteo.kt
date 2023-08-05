@@ -2,18 +2,18 @@ package com.sismantec.conteoinventario
 
 import android.app.Dialog
 import android.content.Intent
-import android.media.Image
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageButton
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.sismantec.conteoinventario.databinding.ActivityNuevoConteoBinding
+import com.sismantec.conteoinventario.funciones.Funciones
 
 class Nuevo_conteo : AppCompatActivity() {
 
     private lateinit var binding: ActivityNuevoConteoBinding
     private lateinit var imgExit: ImageButton
     private  var tipoConteo: String = "U"
+    private val funciones = Funciones()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -44,7 +44,7 @@ class Nuevo_conteo : AppCompatActivity() {
         }
 
         binding.btnCancelar.setOnClickListener {
-            Toast.makeText(this@Nuevo_conteo, getString(R.string.proceso_cancelado), Toast.LENGTH_LONG).show()
+            funciones.toastMensaje(this@Nuevo_conteo, getString(R.string.proceso_cancelado), 0)
 
             val intent = Intent(this@Nuevo_conteo, Menu_principal::class.java)
             startActivity(intent)

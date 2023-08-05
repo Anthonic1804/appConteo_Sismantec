@@ -2,6 +2,7 @@ package com.sismantec.conteoinventario.controladores
 
 import android.content.Context
 import android.widget.Toast
+import com.sismantec.conteoinventario.R
 import com.sismantec.conteoinventario.apiservices.APIService
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.LoginJSON
@@ -14,6 +15,15 @@ import retrofit2.Response
 
 class LoginController {
     private var funciones = Funciones()
+
+    //FUNCION PARA VALIDAR CAMPOS DEL LOGIN
+    fun validarCampos(usuario: String, clave: String): Boolean{
+        var validos = true
+        if(usuario.isEmpty() or clave.isEmpty()){
+            validos = false
+        }
+        return validos
+    }
 
     fun iniciarSesion(context: Context, usuario: String, clave: String, callback: (Boolean) -> Unit) {
         val prefs = funciones.getPreferences(context)
@@ -39,10 +49,10 @@ class LoginController {
                         editor.putInt("idEmpleado", respuesta?.id.toString().toInt())
                         editor.apply()
 
+                        funciones.toastMensaje(context, "BIENVENIDO ${respuesta?.empleado.toString()}", 1)
                         callback(true)
-                        Toast.makeText(context, "BIENVENIDO ${respuesta?.empleado.toString()}", Toast.LENGTH_LONG).show()
                     } else {
-                        Toast.makeText(context, "DATOS INCORRECTOS", Toast.LENGTH_SHORT).show()
+                        funciones.toastMensaje(context, "DATOS INCORRECTOS", 0)
                         callback(false)
                     }
                 }

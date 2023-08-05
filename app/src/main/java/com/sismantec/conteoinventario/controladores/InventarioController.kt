@@ -1,14 +1,17 @@
 package com.sismantec.conteoinventario.controladores
 
+import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
 import android.widget.Toast
 import com.sismantec.conteoinventario.apiservices.APIService
+import com.sismantec.conteoinventario.funciones.AlertaDialogo
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.ResponseBodegas
 import com.sismantec.conteoinventario.modelos.ResponseInventario
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.Response
@@ -45,7 +48,7 @@ class InventarioController {
                         db.endTransaction()
                         db.close()
                     }else{
-                        Toast.makeText(context, "ERROR AL OBTENER LAS BODEGAS", Toast.LENGTH_SHORT).show()
+                        //Toast.makeText(context, "ERROR AL OBTENER LAS BODEGAS", Toast.LENGTH_SHORT).show()
                     }
                 }
             }catch (e:Exception){
@@ -64,6 +67,8 @@ class InventarioController {
         val db = funciones.getDataBase(context).writableDatabase
         val url = funciones.getServidor(funciones.getPreferences(context).ip, funciones.getPreferences(context).puerto)
 
+        val mensaje = AlertaDialogo(context as Activity)
+
         CoroutineScope(Dispatchers.IO).launch {
             try {
                 val call: Response<List<ResponseInventario>> = funciones.getRetrofit(url).create(APIService::class.java)
@@ -71,11 +76,13 @@ class InventarioController {
 
                 withContext(Dispatchers.Main){
                     if(call.isSuccessful){
+                        mensaje.dialogoCargando()
                         val respuesta = call.body()
                         db.beginTransaction()
                         db.execSQL("DELETE FROM inventario")
 
                         respuesta?.let {
+                            delay(3000)
                             for (item in respuesta){
                                 //AQUI SE REALIZARÁ LA INSERCIÓN DE LA DATABASE
                                 val data = ContentValues()
@@ -86,11 +93,12 @@ class InventarioController {
                             }
                             db.setTransactionSuccessful()
                         }
-                        Toast.makeText(context, "INVENTARIO ALMACENADO CORRECTAMENTE", Toast.LENGTH_SHORT).show()
+                        mensaje.dialogoCancelar()
+                        funciones.toastMensaje(context, "INVENTARIO ALMACENADO CORRECTAMENTE", 1)
                         db.endTransaction()
                         db.close()
                     }else{
-                        Toast.makeText(context, "ERROR AL OBTENER EL INVENTARIO", Toast.LENGTH_SHORT).show()
+                        funciones.toastMensaje(context, "ERROR AL OBTENER EL INVENTARIO", 0)
                     }
                 }
             }catch (e: Exception){
