@@ -109,4 +109,38 @@ class InventarioController {
         }
     }
 
+    //FUNCION PARA OBTENER TODAS LAS BODEGAS SI SE ENCUENTRAN
+    fun seleccionarBodegasSQLite(context: Context) : List<String>{
+        val db = funciones.getDataBase(context).readableDatabase
+        val bodegasList = ArrayList<ResponseBodegas>()
+        val nombreBodega = arrayListOf<String>()
+        nombreBodega.add("-- SELECCIONE UNA BODEGA --")
+
+        try{
+            val bodegas = db.rawQuery("SELECT * FROM bodegas", null)
+            if(bodegas.count > 0){
+                bodegas.moveToFirst()
+                do {
+                    val data = ResponseBodegas(
+                        bodegas.getInt(0),
+                        bodegas.getString(1)
+                    )
+                    bodegasList.add(data)
+                }while (bodegas.moveToNext())
+
+                for (item in bodegasList){
+                    nombreBodega.add(item.nombre)
+                }
+            }else{
+                //RESPUESTA SI NO SE ENCUENTRAN BODEGAS AL MACENADAS
+            }
+            bodegas.close()
+        }catch (e: Exception){
+            throw Exception(e.message)
+        }finally {
+            db.close()
+        }
+        return nombreBodega
+    }
+
 }

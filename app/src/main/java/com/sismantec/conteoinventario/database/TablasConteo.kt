@@ -28,7 +28,8 @@ class TablasConteo {
                 "Fecha_inicio TIMESTAMP DEFAULT NULL NULL," +
                 "Fecha_fin TIMESTAMP NULL DEFAULT NULL," +
                 "Fecha_envio TIMESTAMP NULL DEFAULT NULL," +
-                "Id_ajuste_inventario INTEGER DEFAULT NULL NULL)"
+                "Id_ajuste_inventario INTEGER DEFAULT NULL NULL," +
+                "Tipo_conteo VARCHAR(1) NOT NULL)"
     }
 
     // CREAR TABLA DETALLE CONTEO
