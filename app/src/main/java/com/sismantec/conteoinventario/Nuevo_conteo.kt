@@ -4,9 +4,12 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ImageButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityNuevoConteoBinding
 import com.sismantec.conteoinventario.funciones.Funciones
@@ -18,6 +21,7 @@ class Nuevo_conteo : AppCompatActivity() {
     private  var tipoConteo: String = "U"
     private val funciones = Funciones()
     private val inventarioController = InventarioController()
+    private var nombreBodega : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,17 +29,17 @@ class Nuevo_conteo : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.swConteoUnidades.isChecked = true
+        binding.btnIniciar.isEnabled = false
 
         binding.tvFecha.text = "FECHA INICIO: ${funciones.getDateTime()}"
 
         cargarBodegas()
 
         if(inventarioController.seleccionarBodegasSQLite(this@Nuevo_conteo).count() == 1){
-            binding.spBodegas.visibility = View.GONE
+            binding.lyBodegas.visibility = View.GONE
         }else{
             binding.lyUbicacion.visibility = View.GONE
         }
-
     }
 
     override fun onStart() {
@@ -60,6 +64,33 @@ class Nuevo_conteo : AppCompatActivity() {
         binding.btnCancelar.setOnClickListener {
             funciones.toastMensaje(this@Nuevo_conteo, getString(R.string.proceso_cancelado), 0)
             regresar()
+        }
+
+        //LOGICA DEL SPINNER DE BODEGAS
+        binding.spBodegas.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                nombreBodega = parent?.getItemAtPosition(position).toString()
+                binding.btnIniciar.isEnabled = nombreBodega != "-- SELECCIONE UNA BODEGA --"
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                //NADA IMPLEMENTADO
+            }
+
+        }
+        //FIN SPINNER
+
+        binding.btnIniciar.setOnClickListener {
+            if(inventarioController.seleccionarBodegasSQLite(this@Nuevo_conteo).count() == 1){
+                nombreBodega = binding.txtUbicacion.text.toString()
+            }
+
+            Toast.makeText(this,"FUNCION EN DESARROLLO", Toast.LENGTH_SHORT).show()
         }
     }
 

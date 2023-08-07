@@ -61,17 +61,36 @@
                     android:textColor="@color/colorHint"
                     android:textSize="18sp" />
             </com.google.android.material.textfield.TextInputLayout>
-            <Spinner
-                android:id="@+id/spBodegas"
+            <LinearLayout
+                android:id="@+id/lyBodegas"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
                 android:background="@drawable/spinner_bg"
-                android:layout_marginBottom="@dimen/margin_8dp"/>
+                android:layout_marginBottom="@dimen/margin_4dp"
+                android:layout_marginTop="@dimen/margin_8dp">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_bodega"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="@dimen/margin_4dp"/>
+
+                <Spinner
+                    android:id="@+id/spBodegas"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginStart="@dimen/margin_4dp"/>
+
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/margin_4dp">
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/swConteoUnidades"

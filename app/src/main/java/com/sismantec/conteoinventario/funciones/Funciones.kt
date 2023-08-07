@@ -28,7 +28,8 @@ class Funciones{
         val ip: String?,
         val puerto: String?,
         val empleado: String?,
-        val idEmpleado: Int?
+        val idEmpleado: Int?,
+        val esAdmin: Int?
     )
 
     //FUNCION PARA VERIFICAR LA CONEXION A INTERNET
@@ -92,8 +93,9 @@ class Funciones{
         val puerto = prefs.getString("puerto", null)
         val empleado = prefs.getString("empleado", null)
         val idEmpleado = prefs.getInt("idEmpleado", 0)
+        val esAdmin = prefs.getInt("esAdmin", 0)
 
-        return ValoresPrefs(ip, puerto, empleado, idEmpleado)
+        return ValoresPrefs(ip, puerto, empleado, idEmpleado, esAdmin)
 
     }
 
@@ -126,6 +128,5 @@ class Funciones{
         toast.view= layout
         toast.setGravity(Gravity.BOTTOM, 0,100)
         toast.show()
-
     }
 }

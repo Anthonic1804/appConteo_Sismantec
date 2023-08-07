@@ -12,7 +12,7 @@
         android:layout_gravity="top|end"
         android:backgroundTint="#FFFFFF"
         android:scaleType="centerCrop"
-        android:src="@drawable/exit" />
+        android:src="@drawable/error" />
 
     <LinearLayout
         android:layout_width="match_parent"
