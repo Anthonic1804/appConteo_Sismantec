@@ -61,7 +61,6 @@ class InventarioController {
         }
     }
 
-
     //FUNCION PARA OBTENER EL INVENTARIO
     fun obtenerInventario(context: Context){
         val db = funciones.getDataBase(context).writableDatabase
