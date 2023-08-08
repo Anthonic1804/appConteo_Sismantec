@@ -9,10 +9,9 @@ import com.sismantec.conteoinventario.modelos.ResponseBodegas
 class ConteoController {
 
     private var funciones = Funciones()
-    fun obtenerConteoSQLite(context: Context): List<String>{
+    fun obtenerConteoSQLite(context: Context): ArrayList<Conteo>{
         val db = funciones.getDataBase(context).readableDatabase
         val conteosList = ArrayList<Conteo>()
-        val conteo  = arrayListOf<String>()
 
         try{
             val conteos = db.rawQuery("SELECT * FROM conteoInventario", null)
@@ -33,19 +32,6 @@ class ConteoController {
                     )
                     conteosList.add(data)
                 }while (conteos.moveToNext())
-
-                for(item in conteosList){
-                    conteo.add(item.id.toString())
-                    conteo.add(item.nombreEmpleado)
-                    conteo.add(item.ubicacion)
-                    conteo.add(item.idBodega.toString())
-                    conteo.add(item.estado)
-                    conteo.add(item.fechaInicio)
-                    conteo.add(item.fechaFin)
-                    conteo.add(item.fechaEnvio)
-                    conteo.add(item.id_ajuste_inventario.toString())
-                    conteo.add(item.tipoConteo)
-                }
                 conteos.close()
             }else{
                 //MOSTRAR ERROR
@@ -55,10 +41,10 @@ class ConteoController {
         }finally {
             db.close()
         }
-        return conteo
+        return conteosList
     }
 
-    fun registrarNuevoConteo(context: Context, ubicacion:String, tipoConteo:String): Long{
+    fun registrarNuevoConteo(context: Context, ubicacion:String, tipoConteo:String): Long {
         val db = funciones.getDataBase(context).writableDatabase
         val fechaInicio = funciones.getDateTime()
         val prefs = funciones.getPreferences(context)
@@ -78,10 +64,10 @@ class ConteoController {
             idConteo = db.insert("conteoInventario", null, data)
 
             db.setTransactionSuccessful()
-
         }catch (e:Exception){
             throw Exception(e.message)
         }finally {
+            db.endTransaction()
             db.close()
         }
         return idConteo

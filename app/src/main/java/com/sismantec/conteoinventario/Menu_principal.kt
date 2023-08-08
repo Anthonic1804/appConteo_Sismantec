@@ -50,7 +50,8 @@ class Menu_principal : AppCompatActivity() {
 
         binding.nuevoConteo.setOnClickListener {
             if(controlador.seleccionarInventarioSQLite(this@Menu_principal, "").isNotEmpty()){
-                if(conteoController.obtenerConteoSQLite(this@Menu_principal).isNotEmpty()){
+                val conteos = conteoController.obtenerConteoSQLite(this@Menu_principal)
+                if(conteos.isNotEmpty()){
                     conteosList()
                 }else{
                     nuevoConteo()

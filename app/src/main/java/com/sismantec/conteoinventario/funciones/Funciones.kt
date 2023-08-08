@@ -124,7 +124,7 @@ class Funciones{
         txtMensaje.text = msj
 
         val toast = Toast(context)
-        toast.duration = Toast.LENGTH_LONG
+        toast.duration = Toast.LENGTH_SHORT
         toast.view= layout
         toast.setGravity(Gravity.BOTTOM, 0,100)
         toast.show()

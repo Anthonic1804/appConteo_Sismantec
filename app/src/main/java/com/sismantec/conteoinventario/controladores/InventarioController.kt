@@ -46,7 +46,6 @@ class InventarioController {
                             db.setTransactionSuccessful()
                         }
                         db.endTransaction()
-                        db.close()
                     }else{
                         //Toast.makeText(context, "ERROR AL OBTENER LAS BODEGAS", Toast.LENGTH_SHORT).show()
                     }
@@ -56,6 +55,7 @@ class InventarioController {
                     Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
             }finally {
+                db.close()
                 obtenerInventario(context)
             }
         }
@@ -95,7 +95,6 @@ class InventarioController {
                         mensaje.dialogoCancelar()
                         funciones.toastMensaje(context, "INVENTARIO ALMACENADO CORRECTAMENTE", 1)
                         db.endTransaction()
-                        db.close()
                     }else{
                         funciones.toastMensaje(context, "ERROR AL OBTENER EL INVENTARIO", 0)
                     }
@@ -104,6 +103,8 @@ class InventarioController {
                 withContext(Dispatchers.Main){
                     Toast.makeText(context, "Error: ${e.message}", Toast.LENGTH_SHORT).show()
                 }
+            }finally {
+                db.close()
             }
         }
     }

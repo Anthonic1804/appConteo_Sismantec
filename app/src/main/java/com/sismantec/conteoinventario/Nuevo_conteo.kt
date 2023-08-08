@@ -64,8 +64,13 @@ class Nuevo_conteo : AppCompatActivity() {
         }
 
         binding.btnCancelar.setOnClickListener {
+            val conteos = controlador.obtenerConteoSQLite(this@Nuevo_conteo)
             funciones.toastMensaje(this@Nuevo_conteo, getString(R.string.proceso_cancelado), 0)
-            regresar()
+            if(conteos.isNotEmpty()){
+                regresarConteosList()
+            }else{
+                regresar()
+            }
         }
 
         //LOGICA DEL SPINNER DE BODEGAS
@@ -88,18 +93,22 @@ class Nuevo_conteo : AppCompatActivity() {
         //FIN SPINNER
 
         binding.btnIniciar.setOnClickListener {
+
             if(inventarioController.seleccionarBodegasSQLite(this@Nuevo_conteo).count() == 1){
                 nombreBodega = binding.txtUbicacion.text.toString()
-                val idConteo = controlador.registrarNuevoConteo(this@Nuevo_conteo, nombreBodega, tipoConteo)
-                if(idConteo > 0){
-                    val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
-                    intent.putExtra("from", "nuevoConteo")
-                    intent.putExtra("idConteo", idConteo)
-                    startActivity(intent)
-                    finish()
-                }else{
-                    Toast.makeText(this,"ERROR EN EL ID DEL CONTEO", Toast.LENGTH_SHORT).show()
-                }
+            }
+
+            val idConteo = controlador.registrarNuevoConteo(this@Nuevo_conteo, nombreBodega, tipoConteo)
+
+            if(idConteo > 0){
+                val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
+                intent.putExtra("from", "nuevoConteo")
+                intent.putExtra("idConteo", idConteo)
+                intent.putExtra("tipoConteo", tipoConteo)
+                startActivity(intent)
+                finish()
+            }else{
+                Toast.makeText(this,"ERROR EN EL ID DEL CONTEO", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -127,6 +136,12 @@ class Nuevo_conteo : AppCompatActivity() {
 
     private fun regresar(){
         val intent = Intent(this@Nuevo_conteo, Menu_principal::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun regresarConteosList(){
+        val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
         startActivity(intent)
         finish()
     }

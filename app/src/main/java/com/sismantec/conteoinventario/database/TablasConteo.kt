@@ -26,8 +26,8 @@ class TablasConteo {
                 "Id_Bodega INTEGER NOT NULL," +
                 "Estado VARCHAR(15) NOT NULL," +
                 "Fecha_inicio TIMESTAMP DEFAULT NULL NULL," +
-                "Fecha_fin TIMESTAMP NULL DEFAULT NULL," +
-                "Fecha_envio TIMESTAMP NULL DEFAULT NULL," +
+                "Fecha_fin TIMESTAMP DEFAULT NULL NULL," +
+                "Fecha_envio TIMESTAMP DEFAULT NULL NULL," +
                 "Id_ajuste_inventario INTEGER DEFAULT NULL NULL," +
                 "Tipo_conteo VARCHAR(1) NOT NULL)"
     }

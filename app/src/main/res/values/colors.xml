@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorHint">#7E7E7E</color>
+    <color name="Recycler_bg">#F1F1F1</color>
     <color name="background">#F4F4F4</color>
     <color name="colorPrimary">#066BBB</color>
     <color name="colorRojo">#A80707</color>
