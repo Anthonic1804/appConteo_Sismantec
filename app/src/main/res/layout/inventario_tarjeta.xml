@@ -82,16 +82,28 @@
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight=".6"
+                        android:layout_weight=".25"
                         android:layout_height="wrap_content"
-                        android:text="EMPLEADO:"
+                        android:text="UNI:"
                         android:textStyle="bold"/>
                     <TextView
-                        android:id="@+id/tvEmpleadoCarta"
+                        android:id="@+id/tvUni"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
+                        android:layout_weight=".25"
                         android:layout_height="wrap_content"
-                        android:text="ADOLFO HERNANDEZ"/>
+                        android:text="0.0000"/>
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight=".25"
+                        android:layout_height="wrap_content"
+                        android:text="FRA:"
+                        android:textStyle="bold"/>
+                    <TextView
+                        android:id="@+id/tvFra"
+                        android:layout_width="0dp"
+                        android:layout_weight=".25"
+                        android:layout_height="wrap_content"
+                        android:text="0.0000"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
