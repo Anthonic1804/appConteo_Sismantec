@@ -13,6 +13,7 @@ import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityNuevoConteoBinding
 import com.sismantec.conteoinventario.funciones.Funciones
+import com.sismantec.conteoinventario.modelos.Conteo
 
 class Nuevo_conteo : AppCompatActivity() {
 
@@ -21,6 +22,7 @@ class Nuevo_conteo : AppCompatActivity() {
     private  var tipoConteo: String = "U"
     private val funciones = Funciones()
     private val inventarioController = InventarioController()
+    private val controlador = ConteoController()
     private var nombreBodega : String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -88,9 +90,17 @@ class Nuevo_conteo : AppCompatActivity() {
         binding.btnIniciar.setOnClickListener {
             if(inventarioController.seleccionarBodegasSQLite(this@Nuevo_conteo).count() == 1){
                 nombreBodega = binding.txtUbicacion.text.toString()
+                val idConteo = controlador.registrarNuevoConteo(this@Nuevo_conteo, nombreBodega, tipoConteo)
+                if(idConteo > 0){
+                    val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
+                    intent.putExtra("from", "nuevoConteo")
+                    intent.putExtra("idConteo", idConteo)
+                    startActivity(intent)
+                    finish()
+                }else{
+                    Toast.makeText(this,"ERROR EN EL ID DEL CONTEO", Toast.LENGTH_SHORT).show()
+                }
             }
-
-            Toast.makeText(this,"FUNCION EN DESARROLLO", Toast.LENGTH_SHORT).show()
         }
     }
 
