@@ -31,7 +31,7 @@
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/ic_count"/>
+                        android:src="@drawable/ic_product"/>
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
             <LinearLayout
@@ -48,12 +48,12 @@
                     android:orientation="horizontal">
                     <TextView
                         android:layout_width="0dp"
-                        android:layout_weight=".4"
+                        android:layout_weight=".5"
                         android:layout_height="wrap_content"
                         android:text="CODIGO:"
                         android:textStyle="bold"/>
                     <TextView
-                        android:id="@+id/tvUbicacionCarta"
+                        android:id="@+id/tvCodigoCarta"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
@@ -70,40 +70,11 @@
                         android:text="DESCRIPCION:"
                         android:textStyle="bold"/>
                     <TextView
-                        android:id="@+id/tvFechaCarta"
+                        android:id="@+id/tvDescripcionCarta"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="21/07/2023"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight=".25"
-                        android:layout_height="wrap_content"
-                        android:text="UNI:"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:id="@+id/tvUni"
-                        android:layout_width="0dp"
-                        android:layout_weight=".25"
-                        android:layout_height="wrap_content"
-                        android:text="0.0000"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_weight=".25"
-                        android:layout_height="wrap_content"
-                        android:text="FRA:"
-                        android:textStyle="bold"/>
-                    <TextView
-                        android:id="@+id/tvFra"
-                        android:layout_width="0dp"
-                        android:layout_weight=".25"
-                        android:layout_height="wrap_content"
-                        android:text="0.0000"/>
+                        android:text="NOMBRE DEL PRODUCTO"/>
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>

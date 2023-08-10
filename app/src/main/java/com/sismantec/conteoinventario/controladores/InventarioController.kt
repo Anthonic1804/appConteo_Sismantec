@@ -144,13 +144,12 @@ class InventarioController {
     }
 
     //FUNCION PARA VERIFICAR SI HAY INVENTARIO CARGADO
-    fun seleccionarInventarioSQLite(context: Context, query: String): List<String>{
+    fun seleccionarInventarioSQLite(context: Context, query: String): ArrayList<ResponseInventario>{
         val db = funciones.getDataBase(context).readableDatabase
         val inventarioList = ArrayList<ResponseInventario>()
-        val nombreInventario = arrayListOf<String>()
 
         val consulta: String = if (query.isEmpty()){
-            "SELECT * FROM inventario"
+            "SELECT * FROM inventario LIMIT 40"
         }else{
             "SELECT * FROM inventario where codigo=$query"
         }
@@ -168,12 +167,6 @@ class InventarioController {
                     inventarioList.add(data)
                 }while (inventario.moveToNext())
                 inventario.close()
-
-                for(item in inventarioList){
-                    nombreInventario.add(item.id.toString())
-                    nombreInventario.add(item.codigo)
-                    nombreInventario.add(item.descripcion)
-                }
             }else{
              //SI NO HAY INVENTARIO EN DB
             }
@@ -182,7 +175,7 @@ class InventarioController {
         }finally {
             db.close()
         }
-        return nombreInventario
+        return inventarioList
     }
 
 }

@@ -57,7 +57,7 @@ class ConteoController {
             data.put("Nombre_empleado", prefs.empleado)
             data.put("Ubicacion", ubicacion)
             data.put("Id_Bodega", idBodega)
-            data.put("Estado", "ABIERTO")
+            data.put("Estado", "HABILITADO")
             data.put("Fecha_inicio", fechaInicio)
             data.put("Tipo_conteo", tipoConteo)
 

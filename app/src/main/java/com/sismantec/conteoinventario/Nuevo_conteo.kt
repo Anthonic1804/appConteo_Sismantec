@@ -13,7 +13,6 @@ import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityNuevoConteoBinding
 import com.sismantec.conteoinventario.funciones.Funciones
-import com.sismantec.conteoinventario.modelos.Conteo
 
 class Nuevo_conteo : AppCompatActivity() {
 
@@ -101,10 +100,11 @@ class Nuevo_conteo : AppCompatActivity() {
             val idConteo = controlador.registrarNuevoConteo(this@Nuevo_conteo, nombreBodega, tipoConteo)
 
             if(idConteo > 0){
-                val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
+                val intent = Intent(this@Nuevo_conteo, ConteoInfo::class.java)
                 intent.putExtra("from", "nuevoConteo")
                 intent.putExtra("idConteo", idConteo)
                 intent.putExtra("tipoConteo", tipoConteo)
+                intent.putExtra("ubicacion", nombreBodega)
                 startActivity(intent)
                 finish()
             }else{

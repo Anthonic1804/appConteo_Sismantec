@@ -21,6 +21,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".InventarioList"
+            android:exported="false" />
+        <activity
+            android:name=".ConteoInfo"
+            android:exported="false" />
+        <activity
             android:name=".ConteosList"
             android:exported="false" />
         <activity

@@ -20,18 +20,6 @@ class ConteosList : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityConteosListBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        when(intent.getStringExtra("from").toString()){
-            "nuevoConteo"->{
-                //SOLO PRUEBA
-                val tipoConteo = intent.getStringExtra("tipoConteo")
-                val idConteo = intent.getLongExtra("idConteo", 0)
-
-                println("INFORMACION CAPTURADA DESDE NUEVO CONTEO\n" +
-                        "ID CONTEO: $idConteo\n" +
-                        "TIPO CONTEO: $tipoConteo")
-            }
-        }
     }
 
     override fun onStart() {
@@ -67,9 +55,19 @@ class ConteosList : AppCompatActivity() {
         val mLayoutManager = LinearLayoutManager(this@ConteosList, LinearLayoutManager.VERTICAL, false)
         binding.rvListadoConteos.layoutManager = mLayoutManager
 
-        val adapter = ConteoAdapter(lista, this@ConteosList){position ->
+        val adapter = ConteoAdapter(lista, this@ConteosList){ position ->
             val data = lista[position]
 
+            val intent = Intent(this@ConteosList, ConteoInfo::class.java)
+            intent.putExtra("from", "conteosList")
+            intent.putExtra("idConteo", data.id)
+            intent.putExtra("tipoConteo", data.tipoConteo)
+            intent.putExtra("ubicacion", data.ubicacion)
+            intent.putExtra("fechaInicio", data.fechaInicio)
+            intent.putExtra("fechaEnvio", data.fechaEnvio)
+            intent.putExtra("estado", data.estado)
+            startActivity(intent)
+            finish()
         }
 
         binding.rvListadoConteos.adapter = adapter
