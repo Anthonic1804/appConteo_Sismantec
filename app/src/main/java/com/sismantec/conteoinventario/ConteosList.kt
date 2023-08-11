@@ -1,5 +1,6 @@
 package com.sismantec.conteoinventario
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -58,18 +59,26 @@ class ConteosList : AppCompatActivity() {
         val adapter = ConteoAdapter(lista, this@ConteosList){ position ->
             val data = lista[position]
 
+            val prefs = this@ConteosList.getSharedPreferences("serverData", Context.MODE_PRIVATE)
+            val editor = prefs.edit()
+            editor.putInt("idConteo", data.id.toString().toInt())
+            editor.putString("tipoConteo", data.tipoConteo)
+            editor.putString("ubicacion", data.ubicacion)
+            editor.putString("fechaInicio", data.fechaInicio)
+            editor.putString("fechaEnvio", data.fechaEnvio)
+            editor.putString("estado", data.estado)
+            editor.apply()
+
             val intent = Intent(this@ConteosList, ConteoInfo::class.java)
-            intent.putExtra("from", "conteosList")
-            intent.putExtra("idConteo", data.id)
-            intent.putExtra("tipoConteo", data.tipoConteo)
-            intent.putExtra("ubicacion", data.ubicacion)
-            intent.putExtra("fechaInicio", data.fechaInicio)
-            intent.putExtra("fechaEnvio", data.fechaEnvio)
-            intent.putExtra("estado", data.estado)
             startActivity(intent)
             finish()
         }
 
         binding.rvListadoConteos.adapter = adapter
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        //super.onBackPressed()
     }
 }

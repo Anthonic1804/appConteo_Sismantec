@@ -29,7 +29,22 @@ class Funciones{
         val puerto: String?,
         val empleado: String?,
         val idEmpleado: Int?,
-        val esAdmin: Int?
+        val esAdmin: Int?,
+
+        //VARIABLES PARA PRODUCTOS Y CONTEOS
+        val from: String?,
+        val idConteo: Int?,
+        val tipoConteo: String?,
+        val ubicacion: String?,
+        val estado: String?,
+        val fechaInicio: String?,
+        val fechaEnvio: String?,
+
+        //VARIABLES DE PRODUCTOS
+        val idProducto: Int?,
+        val codigoProducto: String?,
+        val descripcionProducto: String?
+
     )
 
     //FUNCION PARA VERIFICAR LA CONEXION A INTERNET
@@ -95,7 +110,24 @@ class Funciones{
         val idEmpleado = prefs.getInt("idEmpleado", 0)
         val esAdmin = prefs.getInt("esAdmin", 0)
 
-        return ValoresPrefs(ip, puerto, empleado, idEmpleado, esAdmin)
+        //VARIABLES PARA LOS CONTEO Y PRODUCTOS
+        val from = prefs.getString("from", null)
+        val idConteo = prefs.getInt("idConteo", 0)
+        val tipoConteo = prefs.getString("tipoConteo", null)
+        val ubicacion = prefs.getString("ubicacion", null)
+        val estado = prefs.getString("estado", null)
+        val fechaInicio = prefs.getString("fechaInicio", null)
+        val fechaEnvio = prefs.getString("fechaEnvio", null)
+
+        //VARIABLES PARA PRODUCTOS
+        val idProducto = prefs.getInt("idProducto", 0)
+        val codigoProducto = prefs.getString("codigoProducto", null)
+        val descripcionProducto = prefs.getString("descripcionProducto", null)
+
+
+        return ValoresPrefs(ip, puerto, empleado, idEmpleado, esAdmin,
+        from, idConteo, tipoConteo, ubicacion, estado, fechaInicio, fechaEnvio,
+        idProducto, codigoProducto, descripcionProducto)
 
     }
 

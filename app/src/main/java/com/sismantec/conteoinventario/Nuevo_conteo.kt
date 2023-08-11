@@ -1,6 +1,7 @@
 package com.sismantec.conteoinventario
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -100,11 +101,15 @@ class Nuevo_conteo : AppCompatActivity() {
             val idConteo = controlador.registrarNuevoConteo(this@Nuevo_conteo, nombreBodega, tipoConteo)
 
             if(idConteo > 0){
+                val prefs = this.getSharedPreferences("serverData", Context.MODE_PRIVATE)
+                val editor = prefs.edit()
+                editor.putString("from", "nuevoConteo")
+                editor.putInt("idConteo", idConteo.toInt())
+                editor.putString("tipoConteo", tipoConteo)
+                editor.putString("ubicacion", nombreBodega)
+                editor.apply()
+
                 val intent = Intent(this@Nuevo_conteo, ConteoInfo::class.java)
-                intent.putExtra("from", "nuevoConteo")
-                intent.putExtra("idConteo", idConteo)
-                intent.putExtra("tipoConteo", tipoConteo)
-                intent.putExtra("ubicacion", nombreBodega)
                 startActivity(intent)
                 finish()
             }else{
@@ -144,5 +149,10 @@ class Nuevo_conteo : AppCompatActivity() {
         val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
         startActivity(intent)
         finish()
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onBackPressed() {
+        //super.onBackPressed()
     }
 }

@@ -1,5 +1,6 @@
 package com.sismantec.conteoinventario
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -21,19 +22,19 @@ class ConteoInfo : AppCompatActivity() {
         val prefs = funciones.getPreferences(this@ConteoInfo)
         binding.tvEmpleado.text = prefs.empleado
 
-        val tipo = when(intent.getStringExtra("tipoConteo")){
+        val tipo = when(prefs.tipoConteo){
             "U" -> "UNIDADES"
             else -> "UNIDADES Y FRACCIONES"
         }
 
         //SE OBTIENE TANTO DE NUEVO CONTEO COMO DE LISTCONTEO
-        val idConteo = intent.getLongExtra("idConteo", 0)
+        val idConteo = prefs.idConteo
 
-        val ubicacion = intent.getStringExtra("ubicacion")
+        val ubicacion = prefs.ubicacion
         binding.tvUbicacion.text = ubicacion
         //****//
 
-        when(intent.getStringExtra("from").toString()){
+        when(prefs.from){
             "nuevoConteo"->{
                 //DESHABILITANDO LOS BOTON ENVIAR Y HABILITAR
                 binding.btnEnviarConteo.visibility = View.GONE
@@ -43,8 +44,8 @@ class ConteoInfo : AppCompatActivity() {
                 binding.tvTipoConteo.text = tipo
                 binding.tvFechaInicio.text = funciones.getDateTime()
             }
-            "conteosList" -> {
-                val estado = intent.getStringExtra("estado")
+            else -> {
+                val estado = prefs.estado
                 when(estado){
                     "HABILITADO"->{
                         binding.btnEnviarConteo.visibility = View.GONE
@@ -63,11 +64,8 @@ class ConteoInfo : AppCompatActivity() {
                 //INGRESANDO VALORES A LOS TEXTVIEW
                 binding.tvTipoConteo.text = tipo
                 binding.tvEstadoConteo.text = "ESTADO: ${estado}"
-                binding.tvFechaInicio.text = intent.getStringExtra("fechaInicio")
-                binding.tvFechaEnvio.text = intent.getStringExtra("fechaEnvio")
-            }
-            "inventarioList" -> {
-
+                binding.tvFechaInicio.text = prefs.fechaInicio
+                binding.tvFechaEnvio.text = prefs.fechaEnvio
             }
         }
     }
@@ -75,6 +73,7 @@ class ConteoInfo : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         binding.imgBackConteo.setOnClickListener {
+            eliminarValoresdeConteoShared()
             regresarConteosList()
         }
 
@@ -89,5 +88,22 @@ class ConteoInfo : AppCompatActivity() {
         val intent = Intent(this@ConteoInfo, ConteosList::class.java)
         startActivity(intent)
         finish()
+    }
+
+    private fun eliminarValoresdeConteoShared(){
+        val prefs = this@ConteoInfo.getSharedPreferences("serverData", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        editor.remove("from")
+        editor.remove("idConteo")
+        editor.remove("tipoConteo")
+        editor.remove("ubicacion")
+        editor.remove("estado")
+        editor.remove("fechaInicio")
+        editor.remove("fechaEnvio")
+        editor.apply()
+    }
+
+    override fun onBackPressed() {
+        //super.onBackPressed()
     }
 }
