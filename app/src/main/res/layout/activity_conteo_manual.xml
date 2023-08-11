@@ -129,17 +129,40 @@
             </com.google.android.material.textfield.TextInputLayout>
 
 
-            <Button
-                android:id="@+id/btnIniciar"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="55dp"
-                style="@style/Widget.Material3.Button.ElevatedButton"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_16dp"
-                android:text="INGRESAR EXISTENCIA"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                app:backgroundTint="@color/colorPrimary"
-                android:textColor="@color/white"/>
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <Button
+                    android:id="@+id/btnIngresarExistencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="@dimen/margin_4dp"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    android:text="INGRESAR EXISTENCIA"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/colorVerde"
+                    android:textColor="@color/white"/>
+
+                <Button
+                    android:id="@+id/btnEliminarExistencia"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_weight="1"
+                    android:layout_marginStart="@dimen/margin_4dp"
+                    style="@style/Widget.Material3.Button.ElevatedButton"
+                    android:text="ELIMINAR"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/colorPrimary"
+                    android:textColor="@color/white"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/btnCancelar"
@@ -148,7 +171,7 @@
                 style="@style/Widget.Material3.Button.ElevatedButton"
                 android:layout_marginTop="@dimen/margin_4dp"
                 android:text="@string/cancelar"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/colorRojo"
                 android:textColor="@color/white"/>

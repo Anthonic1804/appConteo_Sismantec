@@ -5,14 +5,25 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.sismantec.conteoinventario.adapter.InventarioAdapter
+import com.sismantec.conteoinventario.adapter.InventarioEnConteoAdapter
 import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.databinding.ActivityConteoInfoBinding
 import com.sismantec.conteoinventario.funciones.Funciones
+import com.sismantec.conteoinventario.modelos.InventarioEnConteo
+import com.sismantec.conteoinventario.modelos.ResponseInventario
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ConteoInfo : AppCompatActivity() {
 
     private lateinit var binding: ActivityConteoInfoBinding
     private var funciones = Funciones()
+    private lateinit var adapter: InventarioEnConteoAdapter
+    private var controlador = ConteoController()
+    private var idConteo: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityConteoInfoBinding.inflate(layoutInflater)
@@ -28,7 +39,7 @@ class ConteoInfo : AppCompatActivity() {
         }
 
         //SE OBTIENE TANTO DE NUEVO CONTEO COMO DE LISTCONTEO
-        val idConteo = prefs.idConteo
+        idConteo = prefs.idConteo.toString().toInt()
 
         val ubicacion = prefs.ubicacion
         binding.tvUbicacion.text = ubicacion
@@ -72,6 +83,14 @@ class ConteoInfo : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            val lista: ArrayList<InventarioEnConteo> = controlador.obtenerInventarioEnConteo(idConteo,this@ConteoInfo)
+            if(lista.isNotEmpty()){
+                armarListaInventario(lista)
+            }
+        }
+
         binding.imgBackConteo.setOnClickListener {
             eliminarValoresdeConteoShared()
             regresarConteosList()
@@ -82,6 +101,36 @@ class ConteoInfo : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+    }
+
+    private fun armarListaInventario(lista: ArrayList<InventarioEnConteo>){
+        val tipo = funciones.getPreferences(this).tipoConteo.toString()
+        val mLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.rvListadoProductosConteo.layoutManager = mLayoutManager
+
+        adapter = if(tipo == "F"){
+            InventarioEnConteoAdapter(lista, this){ position ->
+                val data = lista[position]
+                val prefs = this.getSharedPreferences("serverData", MODE_PRIVATE)
+                val editor = prefs.edit()
+                editor.putString("from", "conteoInfo")
+                editor.putInt("idProducto", data.idInventario)
+                editor.putString("codigoProducto", data.codigoInventario)
+                editor.putString("descripcionProducto", data.descripcion)
+                editor.putString("unidades", data.unidades.toString())
+                editor.putString("fracciones", data.fracciones.toString())
+                editor.apply()
+
+                val intent = Intent(this, ConteoManual::class.java)
+                startActivity(intent)
+                finish()
+            }
+        }else{
+            InventarioEnConteoAdapter(lista, this){
+                //NO HACE NADA
+            }
+        }
+        binding.rvListadoProductosConteo.adapter = adapter
     }
 
     private fun regresarConteosList(){

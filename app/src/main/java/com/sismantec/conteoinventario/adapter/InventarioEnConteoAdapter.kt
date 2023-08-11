@@ -9,21 +9,24 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sismantec.conteoinventario.InventarioList
 import com.sismantec.conteoinventario.R
 import com.sismantec.conteoinventario.modelos.Conteo
+import com.sismantec.conteoinventario.modelos.InventarioEnConteo
 import com.sismantec.conteoinventario.modelos.ResponseInventario
 
-class InventarioAdapter(
-    private val lista: ArrayList<ResponseInventario>,
+class InventarioEnConteoAdapter(
+    private val lista: ArrayList<InventarioEnConteo>,
     private val context: Context,
     val itemClic: (Int) -> Unit
-) : RecyclerView.Adapter<InventarioAdapter.MyViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InventarioAdapter.MyViewHolder {
-        val vista = LayoutInflater.from(parent.context).inflate(R.layout.inventario_tarjeta, parent, false)
+) : RecyclerView.Adapter<InventarioEnConteoAdapter.MyViewHolder>() {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): InventarioEnConteoAdapter.MyViewHolder {
+        val vista = LayoutInflater.from(parent.context).inflate(R.layout.inventario_enconteo_tarjeta, parent, false)
         return MyViewHolder(vista)
     }
 
-    override fun onBindViewHolder(holder: InventarioAdapter.MyViewHolder, position: Int) {
-        holder.codigo.text = lista[position].codigo
+    override fun onBindViewHolder(holder: InventarioEnConteoAdapter.MyViewHolder, position: Int) {
+        holder.codigo.text = lista[position].codigoInventario
         holder.descripcion.text = lista[position].descripcion
+        holder.unidades.text = lista[position].unidades.toString()
+        holder.fracciones.text = lista[position].fracciones.toString()
     }
 
     override fun getItemCount(): Int {
@@ -33,10 +36,14 @@ class InventarioAdapter(
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView){
         val codigo: TextView
         val descripcion: TextView
+        val unidades: TextView
+        val fracciones: TextView
 
         init {
             codigo = itemView.findViewById(R.id.tvCodigoCarta)
             descripcion = itemView.findViewById(R.id.tvDescripcionCarta)
+            unidades = itemView.findViewById(R.id.tvUni)
+            fracciones = itemView.findViewById(R.id.tvFra)
 
             itemView.setOnClickListener { itemClic(layoutPosition) }
         }

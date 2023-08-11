@@ -107,6 +107,9 @@ class Nuevo_conteo : AppCompatActivity() {
                 editor.putInt("idConteo", idConteo.toInt())
                 editor.putString("tipoConteo", tipoConteo)
                 editor.putString("ubicacion", nombreBodega)
+                editor.putString("estado", "HABILITADO")
+                editor.putString("fechaInicio", funciones.getDateTime())
+                editor.putString("fechaEnvio", null)
                 editor.apply()
 
                 val intent = Intent(this@Nuevo_conteo, ConteoInfo::class.java)

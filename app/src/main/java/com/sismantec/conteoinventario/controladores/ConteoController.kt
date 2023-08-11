@@ -4,6 +4,7 @@ import android.content.ContentValues
 import android.content.Context
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.Conteo
+import com.sismantec.conteoinventario.modelos.InventarioEnConteo
 import com.sismantec.conteoinventario.modelos.ResponseBodegas
 
 class ConteoController {
@@ -103,5 +104,44 @@ class ConteoController {
             db.close()
         }
         return idBodegas
+    }
+
+    fun obtenerInventarioEnConteo(idConteo: Int, context: Context): ArrayList<InventarioEnConteo>{
+        val db = funciones.getDataBase(context).readableDatabase
+        val inventarioList = ArrayList<InventarioEnConteo>()
+        try {
+            val lista = db.rawQuery("SELECT dt.Id_conteo_inventario, " +
+                    "dt.Id_inventario, " +
+                    "i.Codigo, " +
+                    "i.Descripcion, " +
+                    "dt.Unidades," +
+                    "dt.Fracciones FROM detalleConteo AS dt " +
+                    "INNER JOIN inventario AS i ON dt.Id_inventario = i.id " +
+                    "WHERE dt.Id_conteo_inventario = ${idConteo}", null)
+
+            if(lista.count > 0){
+                lista.moveToFirst()
+                do {
+                    val data = InventarioEnConteo(
+                        lista.getInt(0),
+                        lista.getInt(1),
+                        lista.getString(2),
+                        lista.getString(3),
+                        lista.getFloat(4),
+                        lista.getFloat(5)
+                    )
+                    inventarioList.add(data)
+                }while (lista.moveToNext())
+            }else{
+             //NADA IMPLEMENTADO
+            }
+            lista.close()
+        }catch (e:Exception){
+            throw Exception(e.message)
+        }finally {
+            db.close()
+        }
+
+        return inventarioList
     }
 }

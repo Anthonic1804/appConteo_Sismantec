@@ -43,7 +43,9 @@ class Funciones{
         //VARIABLES DE PRODUCTOS
         val idProducto: Int?,
         val codigoProducto: String?,
-        val descripcionProducto: String?
+        val descripcionProducto: String?,
+        val unidades: String?,
+        val fracciones: String?
 
     )
 
@@ -123,11 +125,13 @@ class Funciones{
         val idProducto = prefs.getInt("idProducto", 0)
         val codigoProducto = prefs.getString("codigoProducto", null)
         val descripcionProducto = prefs.getString("descripcionProducto", null)
+        val unidades = prefs.getString("unidades", null)
+        val fracciones = prefs.getString("fracciones", null)
 
 
         return ValoresPrefs(ip, puerto, empleado, idEmpleado, esAdmin,
         from, idConteo, tipoConteo, ubicacion, estado, fechaInicio, fechaEnvio,
-        idProducto, codigoProducto, descripcionProducto)
+        idProducto, codigoProducto, descripcionProducto, unidades, fracciones)
 
     }
 
