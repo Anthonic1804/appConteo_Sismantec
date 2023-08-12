@@ -4,9 +4,11 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.textfield.TextInputLayout
 import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.controladores.LoginController
@@ -84,6 +86,7 @@ class Menu_principal : AppCompatActivity() {
         val dialogo = Dialog(this@Menu_principal)
         dialogo.setCancelable(false)
         dialogo.setContentView(R.layout.alert_cerrar_sesion_usuario)
+        dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.GONE
 
         dialogo.findViewById<Button>(R.id.btncerrar).setOnClickListener {
             if (idEmpleado != null) {

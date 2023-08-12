@@ -226,7 +226,7 @@
                 <Button
                     android:id="@+id/btnCerrarConteo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="55dp"
                     android:layout_marginStart="@dimen/margin_4dp"
                     android:layout_marginEnd="@dimen/margin_4dp"
                     android:layout_weight="1"
@@ -237,7 +237,7 @@
                 <Button
                     android:id="@+id/btnEnviarConteo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="55dp"
                     android:layout_marginStart="@dimen/margin_4dp"
                     android:layout_marginEnd="@dimen/margin_4dp"
                     android:layout_weight="1"
@@ -248,7 +248,7 @@
                 <Button
                     android:id="@+id/btnHabilitarConteo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="55dp"
                     android:layout_marginStart="@dimen/margin_4dp"
                     android:layout_marginEnd="@dimen/margin_4dp"
                     android:layout_weight="1"

@@ -37,6 +37,29 @@
                 android:textColor="@color/black"
                 android:textSize="16sp" />
 
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/lyAjuste"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_4dp"
+                android:layout_marginBottom="@dimen/margin_8dp"
+                android:layout_marginStart="@dimen/margin_4dp"
+                android:layout_marginEnd="@dimen/margin_4dp"
+                app:startIconDrawable="@drawable/ic_pass"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:hint="ID AJUSTE">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/txtAjuste"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorHint"
+                    android:textSize="20sp" />
+            </com.google.android.material.textfield.TextInputLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

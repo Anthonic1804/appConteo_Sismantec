@@ -106,6 +106,7 @@ class ConteoController {
         return idBodegas
     }
 
+    //FUNCION PARA OBTENER EL INVENTARIO DEL CONTEO EN CURSO
     fun obtenerInventarioEnConteo(idConteo: Int, context: Context): ArrayList<InventarioEnConteo>{
         val db = funciones.getDataBase(context).readableDatabase
         val inventarioList = ArrayList<InventarioEnConteo>()
@@ -143,5 +144,32 @@ class ConteoController {
         }
 
         return inventarioList
+    }
+
+    //FUNCION PARA CERRAR EL CONTEO
+    fun cerrarConteo(context: Context, idConteo: Int){
+        val db = funciones.getDataBase(context).writableDatabase
+        db.beginTransaction()
+        val data = ContentValues()
+        data.put("estado", "CERRADO")
+
+        db.update("conteoInventario", data, "Id = ${idConteo}", null)
+
+        db.setTransactionSuccessful()
+        db.endTransaction()
+        db.close()
+    }
+
+    //FUNCION PARA HABILITAR EL CONTEO
+    fun habilitarConteo(context: Context, idConteo: Int){
+        val db = funciones.getDataBase(context).writableDatabase
+        db.beginTransaction()
+        val data = ContentValues()
+        data.put("estado", "HABILITADO")
+
+        db.update("conteoInventario", data, "Id = ${idConteo}", null)
+        db.setTransactionSuccessful()
+        db.endTransaction()
+        db.close()
     }
 }

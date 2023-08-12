@@ -1,18 +1,21 @@
 package com.sismantec.conteoinventario
 
+import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Button
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.sismantec.conteoinventario.adapter.InventarioAdapter
+import com.google.android.material.textfield.TextInputEditText
+import com.google.android.material.textfield.TextInputLayout
 import com.sismantec.conteoinventario.adapter.InventarioEnConteoAdapter
 import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.databinding.ActivityConteoInfoBinding
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.InventarioEnConteo
-import com.sismantec.conteoinventario.modelos.ResponseInventario
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,6 +27,7 @@ class ConteoInfo : AppCompatActivity() {
     private lateinit var adapter: InventarioEnConteoAdapter
     private var controlador = ConteoController()
     private var idConteo: Int = 0
+    private var estado: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityConteoInfoBinding.inflate(layoutInflater)
@@ -34,8 +38,8 @@ class ConteoInfo : AppCompatActivity() {
         binding.tvEmpleado.text = prefs.empleado
 
         val tipo = when(prefs.tipoConteo){
-            "U" -> "UNIDADES"
-            else -> "UNIDADES Y FRACCIONES"
+            "U" -> "AUTOMÁTICO"
+            else -> "MANUAL"
         }
 
         //SE OBTIENE TANTO DE NUEVO CONTEO COMO DE LISTCONTEO
@@ -56,7 +60,7 @@ class ConteoInfo : AppCompatActivity() {
                 binding.tvFechaInicio.text = funciones.getDateTime()
             }
             else -> {
-                val estado = prefs.estado
+                estado = prefs.estado.toString()
                 when(estado){
                     "HABILITADO"->{
                         binding.btnEnviarConteo.visibility = View.GONE
@@ -101,6 +105,18 @@ class ConteoInfo : AppCompatActivity() {
             startActivity(intent)
             finish()
         }
+
+        binding.btnEnviarConteo.setOnClickListener {
+            mensajeConteo("ENVIAR")
+        }
+
+        binding.btnCerrarConteo.setOnClickListener {
+            mensajeConteo("CERRAR")
+        }
+
+        binding.btnHabilitarConteo.setOnClickListener {
+            mensajeConteo("HABILITAR")
+        }
     }
 
     private fun armarListaInventario(lista: ArrayList<InventarioEnConteo>){
@@ -108,7 +124,7 @@ class ConteoInfo : AppCompatActivity() {
         val mLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvListadoProductosConteo.layoutManager = mLayoutManager
 
-        adapter = if(tipo == "F"){
+        adapter = if(tipo == "F" && estado == "HABILITADO"){
             InventarioEnConteoAdapter(lista, this){ position ->
                 val data = lista[position]
                 val prefs = this.getSharedPreferences("serverData", MODE_PRIVATE)
@@ -150,6 +166,66 @@ class ConteoInfo : AppCompatActivity() {
         editor.remove("fechaInicio")
         editor.remove("fechaEnvio")
         editor.apply()
+    }
+
+    //FUNCION DIALOGO PARA ELIMINAR EL PRODUCTO
+    private fun mensajeConteo(tipo: String){
+        val dialogo = Dialog(this)
+        dialogo.setCancelable(false)
+        dialogo.setContentView(R.layout.alert_cerrar_sesion_usuario)
+        dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.GONE
+
+        val texto = when(tipo){
+            "CERRAR" -> {
+                "¿Desea Cerrar el Conteo?"
+            }
+            "HABILITAR" -> {
+                "¿Desea Habilitar el Conteo?"
+            }
+            else->{
+                dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.VISIBLE
+                dialogo.findViewById<Button>(R.id.btncerrar).text = "ENVIAR"
+                dialogo.findViewById<Button>(R.id.btncancelar).text = "SALIR"
+                "PARA ENVIAR EL CONTEO INGRESE EL \n ID DEL AJUSTE DEL SISTEMA ACAE"
+            }
+        }
+
+        dialogo.findViewById<TextView>(R.id.txtsubtitulo).text = "INFORMACION"
+        dialogo.findViewById<TextView>(R.id.txttitulo2).text = texto
+
+        dialogo.findViewById<Button>(R.id.btncerrar).setOnClickListener {
+            when(tipo){
+                "CERRAR" -> {
+                    controlador.cerrarConteo(this, idConteo)
+                    funciones.toastMensaje(this, "CONTEO CERRADO CORRECTAMENTE", 1)
+                    dialogo.dismiss()
+                    regresarConteosList()
+                }
+                "HABILITAR"->{
+                    controlador.habilitarConteo(this, idConteo)
+                    funciones.toastMensaje(this, "CONTEO HABILITADO CORRECTAMENTE", 1)
+                    dialogo.dismiss()
+                    regresarConteosList()
+                }
+                else->{
+                    val ajuste = dialogo.findViewById<TextInputEditText>(R.id.txtAjuste).text.toString()
+                    if(ajuste.isEmpty() || ajuste.toInt() == 0){
+                        funciones.toastMensaje(this,"EL CAMPO ESTÁ VACIO O EL DATO ES INCORRECTO", 0)
+                    }else{
+                        //controlador.habilitarConteo(this, idConteo)
+                        funciones.toastMensaje(this, "CONTEO ENVIADO CORRECTAMENTE", 1)
+                        dialogo.dismiss()
+                        regresarConteosList()
+                    }
+                }
+            }
+        }
+
+        dialogo.findViewById<Button>(R.id.btncancelar).setOnClickListener {
+            dialogo.dismiss()
+        }
+
+        dialogo.show()
     }
 
     override fun onBackPressed() {

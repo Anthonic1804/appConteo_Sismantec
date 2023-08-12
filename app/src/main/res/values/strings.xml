@@ -17,11 +17,11 @@
     <string name="servidor_conectado">SERVIDOR CONECTADO</string>
     <string name="ejemplo_server">http://207.244.229.215:9095</string>
     <string name="men_principal">MENÚ PRINCIPAL</string>
-    <string name="conteo_unidades">CONTEO UNIDADES</string>
+    <string name="conteo_unidades">AUTOMÁTICO</string>
     <string name="fecha_conteo">FECHA INICIO: 21/07/2023</string>
     <string name="ubicacion_bodega">UBICACION/BODEGA</string>
     <string name="ubicaci_n_bodega">UBICACIÓN/BODEGA</string>
-    <string name="conteo_unidades_y_fracciones">CONTEO UNIDADES Y FRACCIONES</string>
+    <string name="conteo_unidades_y_fracciones">MANUAL</string>
     <string name="iniciar_conteo">INICIAR CONTEO</string>
     <string name="cancelar">CANCELAR</string>
     <string name="explicacion_conteo_unidades">-. ESTE TIPO DE CONTEO SOLO SE REALIZARÁ POR MEDIO DE BÚSQUEDA CON LECTOR DE CÓDIGO DE BARRAS, NO PODRA INGRESAR DE FORMA MANUAL LA EXISTENCIA DEL PRODUCO</string>
