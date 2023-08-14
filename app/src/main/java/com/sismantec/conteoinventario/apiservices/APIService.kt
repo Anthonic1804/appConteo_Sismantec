@@ -1,5 +1,6 @@
 package com.sismantec.conteoinventario.apiservices
 
+import com.sismantec.conteoinventario.modelos.ConteoJSON
 import com.sismantec.conteoinventario.modelos.LoginJSON
 import com.sismantec.conteoinventario.modelos.LogoutJSON
 import com.sismantec.conteoinventario.modelos.ResponseBodegas
@@ -29,4 +30,8 @@ interface APIService {
     suspend fun obtenerBodegas(@Url url:String) : Response<List<ResponseBodegas>>
     @GET
     suspend fun obtenerInventario(@Url url:String): Response<List<ResponseInventario>>
+
+    //FUNCION PARA ENVIAR EL CONTEO AL SERVIDOR
+    @POST("inventario/registrar/")
+    suspend fun enviarConteoServer(@Body conteoJSON: ConteoJSON): Response<ResponseConexion>
 }

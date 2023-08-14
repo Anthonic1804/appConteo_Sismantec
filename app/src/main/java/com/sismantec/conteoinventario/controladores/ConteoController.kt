@@ -4,8 +4,13 @@ import android.content.ContentValues
 import android.content.Context
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.Conteo
+import com.sismantec.conteoinventario.modelos.ConteoJSON
+import com.sismantec.conteoinventario.modelos.DetalleConteoJSON
 import com.sismantec.conteoinventario.modelos.InventarioEnConteo
 import com.sismantec.conteoinventario.modelos.ResponseBodegas
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class ConteoController {
 
@@ -171,5 +176,93 @@ class ConteoController {
         db.setTransactionSuccessful()
         db.endTransaction()
         db.close()
+    }
+
+    //FUNCION OBTENER CONTEOINFO y DETALLE PARA ENVIAR A SERVIDOR
+    fun obtenerDetalleConteo(context: Context, idConteo: Int): ArrayList<DetalleConteoJSON>{
+        val db = funciones.getDataBase(context).readableDatabase
+        val detalleLista = ArrayList<DetalleConteoJSON>()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val consulta = db.rawQuery("SELECT * FROM detalleConteo " +
+                        "WHERE Id_conteo_inventario = ${idConteo}", null)
+
+                if(consulta.count > 0){
+                    consulta.moveToFirst()
+                    do {
+                        val data = DetalleConteoJSON(
+                            consulta.getInt(0),
+                            consulta.getFloat(1),
+                            consulta.getFloat(2)
+                        )
+                        detalleLista.add(data)
+                    }while (consulta.moveToNext())
+                    consulta.close()
+                }
+            }catch (e:Exception){
+                throw Exception(e.message)
+            }finally {
+                db.close()
+            }
+        }
+        return detalleLista
+    }
+
+    fun obtenerConteoInfo(context: Context, idConteo: Int): ArrayList<Conteo>{
+        val db = funciones.getDataBase(context).readableDatabase
+        val detalleConteo = ArrayList<Conteo>()
+
+        CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val consulta = db.rawQuery("SELECT * FROM conteoInventario " +
+                        "WHERE Id=${idConteo}", null)
+
+                if(consulta.count > 0){
+                    do {
+                        consulta.moveToFirst()
+                        val data = Conteo(
+                            consulta.getInt(0),
+                            consulta.getString(1),
+                            consulta.getString(2),
+                            consulta.getInt(3),
+                            consulta.getString(4),
+                            consulta.getString(5),
+                            consulta.getString(6),
+                            consulta.getString(7),
+                            consulta.getInt(8),
+                            consulta.getString(9)
+                        )
+                        detalleConteo.add(data)
+                    }while (consulta.moveToNext())
+                    consulta.close()
+                }
+            }catch (e:Exception){
+                throw Exception(e.message)
+            }finally {
+                db.close()
+            }
+        }
+        return detalleConteo
+    }
+
+    //FUNCION PARA ENVIAR EL CONTEO
+    fun enviarConteoJSON(context: Context, idConteo: Int): ArrayList<ConteoJSON>{
+        val enviarConteo = ArrayList<ConteoJSON>()
+        CoroutineScope(Dispatchers.IO).launch {
+            val conteoInfo: ArrayList<Conteo> = obtenerConteoInfo(context, idConteo)
+            val detalleConteo: ArrayList<DetalleConteoJSON> = obtenerDetalleConteo(context, idConteo)
+
+           /* val data = ConteoJSON(
+                for(item in conteoInfo){
+                    item.fechaInicio.toString(),
+                    item.fechaFin.toString(),
+                    item.fechaEnvio.toString(),
+                    item.ubicacion,
+                    item.idBodega,
+                    item.
+                }
+            )*/
+        }
+        return enviarConteo
     }
 }
