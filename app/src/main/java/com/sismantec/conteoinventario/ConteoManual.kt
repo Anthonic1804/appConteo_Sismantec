@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.material.textfield.TextInputLayout
 import com.sismantec.conteoinventario.controladores.ConteoManualController
 import com.sismantec.conteoinventario.databinding.ActivityConteoManualBinding
 import com.sismantec.conteoinventario.funciones.Funciones
@@ -124,6 +125,7 @@ class ConteoManual : AppCompatActivity() {
         dialogo.setContentView(R.layout.alert_cerrar_sesion_usuario)
         dialogo.findViewById<TextView>(R.id.txtsubtitulo).text = "INFORMACION"
         dialogo.findViewById<TextView>(R.id.txttitulo2).text = "¿Desea Eliminar el Producto?"
+        dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.GONE
 
         dialogo.findViewById<Button>(R.id.btncerrar).setOnClickListener {
             controlador.eliminarProductoConteo(idConteo, idInventario, this)

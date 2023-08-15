@@ -19,6 +19,7 @@ import com.sismantec.conteoinventario.modelos.InventarioEnConteo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class ConteoInfo : AppCompatActivity() {
 
@@ -107,7 +108,13 @@ class ConteoInfo : AppCompatActivity() {
         }
 
         binding.btnEnviarConteo.setOnClickListener {
-            mensajeConteo("ENVIAR")
+            CoroutineScope(Dispatchers.IO).launch {
+                if(funciones.isInternetReachable(this@ConteoInfo)){
+                    withContext(Dispatchers.Main){
+                        mensajeConteo("ENVIAR")
+                    }
+                }
+            }
         }
 
         binding.btnCerrarConteo.setOnClickListener {
@@ -212,10 +219,13 @@ class ConteoInfo : AppCompatActivity() {
                     if(ajuste.isEmpty() || ajuste.toInt() == 0){
                         funciones.toastMensaje(this,"EL CAMPO ESTÁ VACIO O EL DATO ES INCORRECTO", 0)
                     }else{
-                        //controlador.habilitarConteo(this, idConteo)
-                        funciones.toastMensaje(this, "CONTEO ENVIADO CORRECTAMENTE", 1)
-                        dialogo.dismiss()
-                        regresarConteosList()
+                        controlador.enviarDataConteoServer(this, idConteo, ajuste.toInt()){respuesta->
+                            if(respuesta){
+                                funciones.toastMensaje(this, "CONTEO ENVIADO CORRECTAMENTE", 1)
+                                dialogo.dismiss()
+                                regresarConteosList()
+                            }
+                        }
                     }
                 }
             }

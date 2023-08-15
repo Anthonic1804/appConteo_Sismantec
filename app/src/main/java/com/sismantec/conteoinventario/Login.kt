@@ -20,6 +20,10 @@ class Login : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
+
+    override fun onStart() {
+        super.onStart()
 
         binding.btnIngresar.setOnClickListener {
             if(controller.validarCampos(binding.txtUsuario.text.toString(), binding.txtPass.text.toString())){
@@ -41,6 +45,7 @@ class Login : AppCompatActivity() {
             }
         }
     }
+
     private fun menuPrincipal(){
         val intent = Intent(this@Login, Menu_principal::class.java)
         startActivity(intent)

@@ -1,5 +1,6 @@
 package com.sismantec.conteoinventario.apiservices
 
+import com.google.gson.JsonObject
 import com.sismantec.conteoinventario.modelos.ConteoJSON
 import com.sismantec.conteoinventario.modelos.LoginJSON
 import com.sismantec.conteoinventario.modelos.LogoutJSON
@@ -7,6 +8,7 @@ import com.sismantec.conteoinventario.modelos.ResponseBodegas
 import com.sismantec.conteoinventario.modelos.ResponseConexion
 import com.sismantec.conteoinventario.modelos.ResponseInventario
 import com.sismantec.conteoinventario.modelos.ResponseLogin
+import org.json.JSONObject
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -32,6 +34,6 @@ interface APIService {
     suspend fun obtenerInventario(@Url url:String): Response<List<ResponseInventario>>
 
     //FUNCION PARA ENVIAR EL CONTEO AL SERVIDOR
-    @POST("inventario/registrar/")
-    suspend fun enviarConteoServer(@Body conteoJSON: ConteoJSON): Response<ResponseConexion>
+    @POST("inventario/registrar")
+    suspend fun enviarConteoServer(@Body conteoJSON: JSONObject): Response<ResponseConexion>
 }
