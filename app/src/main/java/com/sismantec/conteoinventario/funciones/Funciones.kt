@@ -138,7 +138,7 @@ class Funciones{
     //FUNCION PARA OBTENER FECHA
     fun getDateTime(): String {
         val dateFormat = SimpleDateFormat(
-            "yyyy-MM-dd", Locale.getDefault()
+            "yyyy-MM-dd'T'HH:mm:ss", Locale.getDefault()
         )
         val date = Date()
         return dateFormat.format(date)

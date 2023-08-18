@@ -2,7 +2,7 @@ package com.sismantec.conteoinventario.controladores
 
 import android.content.ContentValues
 import android.content.Context
-import android.widget.Toast
+import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.sismantec.conteoinventario.apiservices.APIService
 import com.sismantec.conteoinventario.funciones.Funciones
@@ -15,8 +15,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
-import org.json.JSONObject
 import retrofit2.Response
 
 class ConteoController {
@@ -236,11 +234,10 @@ class ConteoController {
         return detalleLista
     }
 
-    fun conteoInfoJSON(context: Context, idConteo: Int, idAjuste: Int): JSONObject {
+    fun conteoInfoJSON(context: Context, idConteo: Int, idAjuste: Int): JsonObject {
         val db = funciones.getDataBase(context).readableDatabase
         var detalleConteo: Conteo? = null
-        val dataConteo = JSONObject()
-
+        val dataConteo = JsonObject()
         try {
             val consulta = db.rawQuery(
                 "SELECT * FROM conteoInventario " +
@@ -270,32 +267,28 @@ class ConteoController {
         }
 
         //CONSULTADO LA IFNORMACION DEL CONTEO
-        dataConteo.put("fechaInicio", detalleConteo?.fechaInicio)
-        dataConteo.put("fechaFin", detalleConteo?.fechaFin)
-        dataConteo.put("fechaEnvio", funciones.getDateTime())
-        dataConteo.put("ubicacion", detalleConteo?.ubicacion)
-        dataConteo.put("idBodega", detalleConteo?.idBodega)
-        dataConteo.put("idAjusteInventario", idAjuste)
-        dataConteo.put("idEmpeado", funciones.getPreferences(context).idEmpleado)
-        dataConteo.put("empleado", funciones.getPreferences(context).empleado)
+        dataConteo.addProperty("fechaInicio", detalleConteo?.fechaInicio)
+        dataConteo.addProperty("fechaFin", detalleConteo?.fechaFin)
+        dataConteo.addProperty("fechaEnvio", funciones.getDateTime())
+        dataConteo.addProperty("ubicacion", detalleConteo?.ubicacion)
+        dataConteo.addProperty("idBodega", detalleConteo?.idBodega)
+        dataConteo.addProperty("idAjusteInventario", idAjuste)
+        dataConteo.addProperty("idEmpleado", funciones.getPreferences(context).idEmpleado)
+        dataConteo.addProperty("empleado", funciones.getPreferences(context).empleado)
 
         //CONSULTANDO EL DETALLE DEL CONTEO
         val detalleConteoLista = obtenerDetalleConteo(context, idConteo)
-        val detalleEnviar = JSONArray()
+        val detalleEnviar = JsonArray()
 
         detalleConteoLista.forEach { item ->
-            val dataDetalle = JSONObject()
-            dataDetalle.put("Id_inventario", item.id_Inventario)
-            dataDetalle.put("Existencia", item.existencias)
-            dataDetalle.put("Existencia_u", item.existencias_u)
-
-            detalleEnviar.put(dataDetalle)
+            val dataDetalle = JsonObject()
+            dataDetalle.addProperty("id_Inventario", item.id_Inventario.toInt())
+            dataDetalle.addProperty("existencias", item.existencias.toString())
+            dataDetalle.addProperty("existencias_u", item.existencias_u.toString())
+            detalleEnviar.add(dataDetalle)
         }
-        dataConteo.put("detalle", detalleEnviar)
 
-        //ACTUALIZANDO EL ESTADO DEL CONTEO
-        conteoEnviado(context, idConteo, funciones.getDateTime(), idAjuste)
-
+        dataConteo.add("detalle", detalleEnviar)
         return dataConteo
     }
 
@@ -318,13 +311,14 @@ class ConteoController {
                         .enviarConteoServer(data)
 
                 //val respuesta = response.body()
-                println("RESPUESTA OBTENIDA DEL SERVIDOR" + response)
+                println("RESPUESTA OBTENIDA DEL SERVIDOR " + response)
 
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         callback(true)
                     } else {
                         withContext(Dispatchers.Main) {
+                            println("RESPUESTA: " + response.errorBody())
                             funciones.toastMensaje(
                                 context,
                                 "ERROR AL ENVIAR EL CONTEO VERIFIQUE SU ID DE AJUSTE",

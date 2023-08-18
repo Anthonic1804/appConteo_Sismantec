@@ -222,6 +222,10 @@ class ConteoInfo : AppCompatActivity() {
                         controlador.enviarDataConteoServer(this, idConteo, ajuste.toInt()){respuesta->
                             if(respuesta){
                                 funciones.toastMensaje(this, "CONTEO ENVIADO CORRECTAMENTE", 1)
+
+                                //ACTUALIZANDO EL ESTADO DEL CONTEO
+                                controlador.conteoEnviado(this, idConteo, funciones.getDateTime(), ajuste.toInt())
+
                                 dialogo.dismiss()
                                 regresarConteosList()
                             }
