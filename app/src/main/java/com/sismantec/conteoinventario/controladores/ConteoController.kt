@@ -84,7 +84,7 @@ class ConteoController {
         return idConteo
     }
 
-    fun obtenerIdBodega(context: Context, nombre: String): Int {
+    private fun obtenerIdBodega(context: Context, nombre: String): Int {
         val db = funciones.getDataBase(context).readableDatabase
         val bodegasList = ArrayList<ResponseBodegas>()
         var idBodegas = 0
@@ -140,8 +140,8 @@ class ConteoController {
                         lista.getInt(1),
                         lista.getString(2),
                         lista.getString(3),
-                        lista.getFloat(4),
-                        lista.getFloat(5)
+                        lista.getInt(4),
+                        lista.getInt(5)
                     )
                     inventarioList.add(data)
                 } while (lista.moveToNext())
@@ -205,12 +205,12 @@ class ConteoController {
     }
 
     //FUNCION OBTENER CONTEOINFO y DETALLE PARA ENVIAR A SERVIDOR
-    fun obtenerDetalleConteo(context: Context, idConteo: Int): ArrayList<DetalleConteoJSON> {
+    private fun obtenerDetalleConteo(context: Context, idConteo: Int): ArrayList<DetalleConteoJSON> {
         val db = funciones.getDataBase(context).readableDatabase
         val detalleLista = ArrayList<DetalleConteoJSON>()
         try {
             val consulta = db.rawQuery(
-                "SELECT * FROM detalleConteo " +
+                "SELECT Id_inventario, Unidades, Fracciones FROM detalleConteo " +
                         "WHERE Id_conteo_inventario = ${idConteo}", null
             )
 
@@ -219,8 +219,8 @@ class ConteoController {
                 do {
                     val data = DetalleConteoJSON(
                         consulta.getInt(0),
-                        consulta.getFloat(1),
-                        consulta.getFloat(2)
+                        consulta.getInt(1),
+                        consulta.getInt(2)
                     )
                     detalleLista.add(data)
                 } while (consulta.moveToNext())
@@ -234,7 +234,7 @@ class ConteoController {
         return detalleLista
     }
 
-    fun conteoInfoJSON(context: Context, idConteo: Int, idAjuste: Int): JsonObject {
+    private fun conteoInfoJSON(context: Context, idConteo: Int, idAjuste: Int): JsonObject {
         val db = funciones.getDataBase(context).readableDatabase
         var detalleConteo: Conteo? = null
         val dataConteo = JsonObject()
@@ -282,9 +282,9 @@ class ConteoController {
 
         detalleConteoLista.forEach { item ->
             val dataDetalle = JsonObject()
-            dataDetalle.addProperty("id_Inventario", item.id_Inventario.toInt())
-            dataDetalle.addProperty("existencias", item.existencias.toString())
-            dataDetalle.addProperty("existencias_u", item.existencias_u.toString())
+            dataDetalle.addProperty("id_Inventario", item.id_Inventario)
+            dataDetalle.addProperty("existencias", item.existencias)
+            dataDetalle.addProperty("existencias_u", item.existencias_u)
             detalleEnviar.add(dataDetalle)
         }
 
@@ -302,7 +302,6 @@ class ConteoController {
         val url = funciones.getServidor(prefs.ip, prefs.puerto)
 
         val data = conteoInfoJSON(context, idConteo, idAjuste)
-        println(data)
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -310,15 +309,11 @@ class ConteoController {
                     funciones.getRetrofit(url).create(APIService::class.java)
                         .enviarConteoServer(data)
 
-                //val respuesta = response.body()
-                println("RESPUESTA OBTENIDA DEL SERVIDOR " + response)
-
                 withContext(Dispatchers.Main) {
                     if (response.isSuccessful) {
                         callback(true)
                     } else {
                         withContext(Dispatchers.Main) {
-                            println("RESPUESTA: " + response.errorBody())
                             funciones.toastMensaje(
                                 context,
                                 "ERROR AL ENVIAR EL CONTEO VERIFIQUE SU ID DE AJUSTE",

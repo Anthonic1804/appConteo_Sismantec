@@ -48,6 +48,8 @@ class Menu_principal : AppCompatActivity() {
             intent.putExtra("from", "menu")
             startActivity(intent)
             finish()
+
+            overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
 
         binding.nuevoConteo.setOnClickListener {
@@ -123,17 +125,23 @@ class Menu_principal : AppCompatActivity() {
         val intent = Intent(this@Menu_principal, SplashScreen::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     private fun nuevoConteo(){
         val intent = Intent(this@Menu_principal, Nuevo_conteo::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     private fun conteosList(){
         val intent = Intent(this@Menu_principal, ConteosList::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 }

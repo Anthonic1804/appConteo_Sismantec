@@ -34,14 +34,20 @@ class SplashScreen : AppCompatActivity() {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
+
+                overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }else if(empleado.isNullOrEmpty()){
                 val intent = Intent(this, Login::class.java)
                 startActivity(intent)
                 finish()
+
+                overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }else{
                 val intent = Intent(this, Menu_principal::class.java)
                 startActivity(intent)
                 finish()
+
+                overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }
         }, 5000)
 

@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class ConteoManualController {
     private var funciones = Funciones()
 
-    fun registrarProductoConteo(idConteo: Int, idInventario: Int, unidades: Float, fracciones: Float, context: Context){
+    fun registrarProductoConteo(idConteo: Int, idInventario: Int, unidades: Int, fracciones: Int, context: Context){
         CoroutineScope(Dispatchers.IO).launch {
             val db = funciones.getDataBase(context).writableDatabase
             db.beginTransaction()
@@ -28,7 +28,7 @@ class ConteoManualController {
         }
     }
 
-    fun actualizarProductoConteo(idConteo: Int, idInventario: Int, unidades: Float, fracciones: Float, context: Context){
+    fun actualizarProductoConteo(idConteo: Int, idInventario: Int, unidades: Int, fracciones: Int, context: Context){
         CoroutineScope(Dispatchers.IO).launch {
             val db = funciones.getDataBase(context).writableDatabase
             db.beginTransaction()

@@ -79,11 +79,15 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this@MainActivity, Menu_principal::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
     private fun iniciarSesion(){
         val intent = Intent(this@MainActivity, Login::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     private fun almacenarServidor(ip: String, puerto:String){

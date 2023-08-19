@@ -54,10 +54,10 @@ class ConteoManual : AppCompatActivity() {
             }else{
                 val idConteo = funciones.getPreferences(this).idConteo.toString().toInt()
                 val idInventario = funciones.getPreferences(this).idProducto.toString().toInt()
-                val unidades = binding.txtUnidadesManual.text.toString().toFloat()
-                var fracciones : Float = 0.00f
+                val unidades = binding.txtUnidadesManual.text.toString().toInt()
+                var fracciones : Int = 0
                 if(binding.txtFraccionesManual.text.toString().isNotEmpty()){
-                    fracciones = binding.txtFraccionesManual.text.toString().toFloat()
+                    fracciones = binding.txtFraccionesManual.text.toString().toInt()
                 }
 
                 when(from){
@@ -110,12 +110,16 @@ class ConteoManual : AppCompatActivity() {
         val intent = Intent(this@ConteoManual, InventarioList::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     private fun regresarConteoInfo(){
         val intent = Intent(this@ConteoManual, ConteoInfo::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     //FUNCION DIALOGO PARA ELIMINAR EL PRODUCTO

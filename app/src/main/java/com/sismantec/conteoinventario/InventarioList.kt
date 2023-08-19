@@ -3,8 +3,12 @@ package com.sismantec.conteoinventario
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.SearchView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.journeyapps.barcodescanner.ScanContract
+import com.journeyapps.barcodescanner.ScanIntentResult
+import com.journeyapps.barcodescanner.ScanOptions
 import com.sismantec.conteoinventario.adapter.InventarioAdapter
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityInventarioListBinding
@@ -13,18 +17,34 @@ import com.sismantec.conteoinventario.modelos.ResponseInventario
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
-class InventarioList : AppCompatActivity() {
+
+class InventarioList : AppCompatActivity(){
 
     private lateinit var binding: ActivityInventarioListBinding
     private var inventario = InventarioController()
     private var funciones = Funciones()
     private lateinit var adapter: InventarioAdapter
 
+    private val barcodeLauncher = registerForActivityResult(
+        ScanContract()
+    ) { result: ScanIntentResult ->
+        if (result.contents == null) {
+            funciones.toastMensaje(this, "LECTURA CANCELADA", 0)
+        } else {
+            binding.svProductosList.setQuery(result.contents, false)
+            binding.svProductosList.findFocus()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityInventarioListBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.svProductosList.findFocus()
+        binding.svProductosList.onActionViewExpanded()
     }
 
     override fun onStart() {
@@ -33,7 +53,9 @@ class InventarioList : AppCompatActivity() {
         CoroutineScope(Dispatchers.IO).launch {
             val lista: ArrayList<ResponseInventario> = inventario.seleccionarInventarioSQLite(this@InventarioList, "")
             if(lista.isNotEmpty()){
-                armarListaInventario(lista)
+                withContext(Dispatchers.Main){
+                    armarListaInventario(lista)
+                }
             }
         }
 
@@ -41,7 +63,40 @@ class InventarioList : AppCompatActivity() {
             val intent = Intent(this@InventarioList, ConteoInfo::class.java)
             startActivity(intent)
             finish()
+
+            overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
+
+        binding.imgBarra.setOnClickListener {
+            val options = ScanOptions()
+            options.setDesiredBarcodeFormats(ScanOptions.ONE_D_CODE_TYPES)
+            options.setPrompt("LECTOR DE CODIGO DE BARRA - SISMANTEC")
+            options.setCameraId(0)
+            options.setOrientationLocked(true);
+            options.setBeepEnabled(true)
+            options.setBarcodeImageEnabled(true)
+            barcodeLauncher.launch(options)
+        }
+
+        binding.svProductosList.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
+            androidx.appcompat.widget.SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                CoroutineScope(Dispatchers.IO).launch {
+                    val lista: ArrayList<ResponseInventario> = inventario.seleccionarInventarioSQLite(this@InventarioList, "$newText")
+                    if(lista.isNotEmpty()){
+                        withContext(Dispatchers.Main){
+                            armarListaInventario(lista)
+                        }
+                    }
+                }
+                return false
+            }
+
+        })
 
     }
 
@@ -63,6 +118,8 @@ class InventarioList : AppCompatActivity() {
                 val intent = Intent(this@InventarioList, ConteoManual::class.java)
                 startActivity(intent)
                 finish()
+
+                overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }
         }else{
             InventarioAdapter(lista, this@InventarioList){

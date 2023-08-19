@@ -58,4 +58,7 @@ dependencies {
     //CORRUTINAS
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1'
 
+    //LECTOR DE CODIGOS DE BARRA Y QR
+    implementation 'com.journeyapps:zxing-android-embedded:4.3.0'
+
 }

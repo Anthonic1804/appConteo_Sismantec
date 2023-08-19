@@ -55,11 +55,13 @@
             android:layout_marginEnd="@dimen/margin_16dp"
             android:orientation="horizontal">
 
-            <SearchView
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/svProductosList"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginEnd="@dimen/margin_4dp"
                 android:layout_weight="1"
+                android:inputType="textCapCharacters"
                 android:queryHint="CÓDIGO / DESCRIPCIÓN"/>
 
             <ImageView
@@ -76,6 +78,7 @@
         android:id="@+id/rvInventarioList"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layoutAnimation="@anim/recycler_animation"
         android:layout_marginTop="@dimen/margin_8dp"
         android:layout_marginBottom="@dimen/margin_16dp"
         app:layout_constraintBottom_toBottomOf="parent"

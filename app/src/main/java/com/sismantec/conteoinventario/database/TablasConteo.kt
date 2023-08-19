@@ -38,7 +38,7 @@ class TablasConteo {
                 "Id INTEGER PRIMARY KEY AUTOINCREMENT," +
                 "Id_conteo_inventario INTEGER NOT NULL," +
                 "Id_inventario INTEGER NOT NULL," +
-                "Unidades NUMERIC(18, 6) NULL," +
-                "Fracciones NUMERIC(18, 6) NULL)"
+                "Unidades INTEGER DEFAULT 0," +
+                "Fracciones INTEGER DEFAULT 0)"
     }
 }

@@ -105,6 +105,8 @@ class ConteoInfo : AppCompatActivity() {
             val intent = Intent(this@ConteoInfo, InventarioList::class.java)
             startActivity(intent)
             finish()
+
+            overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
 
         binding.btnEnviarConteo.setOnClickListener {
@@ -147,6 +149,8 @@ class ConteoInfo : AppCompatActivity() {
                 val intent = Intent(this, ConteoManual::class.java)
                 startActivity(intent)
                 finish()
+
+                overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }
         }else{
             InventarioEnConteoAdapter(lista, this){
@@ -160,6 +164,8 @@ class ConteoInfo : AppCompatActivity() {
         val intent = Intent(this@ConteoInfo, ConteosList::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     private fun eliminarValoresdeConteoShared(){

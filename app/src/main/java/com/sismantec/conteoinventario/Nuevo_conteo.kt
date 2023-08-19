@@ -115,6 +115,8 @@ class Nuevo_conteo : AppCompatActivity() {
                 val intent = Intent(this@Nuevo_conteo, ConteoInfo::class.java)
                 startActivity(intent)
                 finish()
+
+                overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }else{
                 Toast.makeText(this,"ERROR EN EL ID DEL CONTEO", Toast.LENGTH_SHORT).show()
             }
@@ -146,12 +148,16 @@ class Nuevo_conteo : AppCompatActivity() {
         val intent = Intent(this@Nuevo_conteo, Menu_principal::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     private fun regresarConteosList(){
         val intent = Intent(this@Nuevo_conteo, ConteosList::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
     @Deprecated("Deprecated in Java")

@@ -151,7 +151,7 @@ class InventarioController {
         val consulta: String = if (query.isEmpty()){
             "SELECT * FROM inventario LIMIT 40"
         }else{
-            "SELECT * FROM inventario where codigo=$query"
+            "SELECT * FROM inventario WHERE codigo='$query' OR Descripcion LIKE '%$query%'"
         }
 
         try {

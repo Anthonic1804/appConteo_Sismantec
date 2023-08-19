@@ -50,5 +50,7 @@ class Login : AppCompatActivity() {
         val intent = Intent(this@Login, Menu_principal::class.java)
         startActivity(intent)
         finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 }

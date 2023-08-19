@@ -43,12 +43,16 @@ class ConteosList : AppCompatActivity() {
             val intent = Intent(this@ConteosList, Menu_principal::class.java)
             startActivity(intent)
             finish()
+
+            overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
 
         binding.btnAgregarConteo.setOnClickListener {
             val intent = Intent(this@ConteosList, Nuevo_conteo::class.java)
             startActivity(intent)
             finish()
+
+            overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
     }
 
@@ -72,13 +76,10 @@ class ConteosList : AppCompatActivity() {
             val intent = Intent(this@ConteosList, ConteoInfo::class.java)
             startActivity(intent)
             finish()
+
+            overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
 
         binding.rvListadoConteos.adapter = adapter
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onBackPressed() {
-        //super.onBackPressed()
     }
 }

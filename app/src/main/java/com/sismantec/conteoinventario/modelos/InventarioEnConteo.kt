@@ -5,7 +5,7 @@ data class InventarioEnConteo(
     val idInventario: Int,
     val codigoInventario: String,
     val descripcion: String,
-    val unidades: Float,
-    val fracciones: Float
+    val unidades: Int,
+    val fracciones: Int
 
 )
