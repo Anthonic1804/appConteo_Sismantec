@@ -20,6 +20,7 @@ import retrofit2.Response
 class ConteoController {
 
     private var funciones = Funciones()
+    //FUNCION PARA OBTENER TODOS LOS CONTEOS DE SQLITE
     fun obtenerConteoSQLite(context: Context): ArrayList<Conteo> {
         val db = funciones.getDataBase(context).readableDatabase
         val conteosList = ArrayList<Conteo>()
@@ -55,6 +56,7 @@ class ConteoController {
         return conteosList
     }
 
+    //FUNCION PARA REGISTRAR UN NUEVO CONTEO
     fun registrarNuevoConteo(context: Context, ubicacion: String, tipoConteo: String): Long {
         val db = funciones.getDataBase(context).writableDatabase
         val fechaInicio = funciones.getDateTime()
@@ -84,6 +86,7 @@ class ConteoController {
         return idConteo
     }
 
+    //FUNCION PARA OBTENER EL ID DE LA BODEGA SELECCIONADA
     private fun obtenerIdBodega(context: Context, nombre: String): Int {
         val db = funciones.getDataBase(context).readableDatabase
         val bodegasList = ArrayList<ResponseBodegas>()
@@ -234,6 +237,7 @@ class ConteoController {
         return detalleLista
     }
 
+    //FUNCION PARA CREAR EL JSON QUE SE ENVIARA AL SERVIDOR
     private fun conteoInfoJSON(context: Context, idConteo: Int, idAjuste: Int): JsonObject {
         val db = funciones.getDataBase(context).readableDatabase
         var detalleConteo: Conteo? = null
@@ -292,6 +296,7 @@ class ConteoController {
         return dataConteo
     }
 
+    //FUNCION PARA ENVIAR EL CONTEO AL SERVIDOR
     fun enviarDataConteoServer(
         context: Context,
         idConteo: Int,

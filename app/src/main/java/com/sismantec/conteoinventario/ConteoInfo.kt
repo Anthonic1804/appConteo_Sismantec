@@ -14,10 +14,12 @@ import com.google.android.material.textfield.TextInputLayout
 import com.sismantec.conteoinventario.adapter.InventarioEnConteoAdapter
 import com.sismantec.conteoinventario.controladores.ConteoController
 import com.sismantec.conteoinventario.databinding.ActivityConteoInfoBinding
+import com.sismantec.conteoinventario.funciones.AlertaDialogo
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.InventarioEnConteo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -29,6 +31,7 @@ class ConteoInfo : AppCompatActivity() {
     private var controlador = ConteoController()
     private var idConteo: Int = 0
     private var estado: String = ""
+    private var mensaje = AlertaDialogo(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityConteoInfoBinding.inflate(layoutInflater)
@@ -120,11 +123,19 @@ class ConteoInfo : AppCompatActivity() {
         }
 
         binding.btnCerrarConteo.setOnClickListener {
-            mensajeConteo("CERRAR")
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main){
+                    mensajeConteo("CERRAR")
+                }
+            }
         }
 
         binding.btnHabilitarConteo.setOnClickListener {
-            mensajeConteo("HABILITAR")
+            CoroutineScope(Dispatchers.IO).launch {
+                withContext(Dispatchers.Main){
+                    mensajeConteo("HABILITAR")
+                }
+            }
         }
     }
 
@@ -225,17 +236,8 @@ class ConteoInfo : AppCompatActivity() {
                     if(ajuste.isEmpty() || ajuste.toInt() == 0){
                         funciones.toastMensaje(this,"EL CAMPO ESTÁ VACIO O EL DATO ES INCORRECTO", 0)
                     }else{
-                        controlador.enviarDataConteoServer(this, idConteo, ajuste.toInt()){respuesta->
-                            if(respuesta){
-                                funciones.toastMensaje(this, "CONTEO ENVIADO CORRECTAMENTE", 1)
-
-                                //ACTUALIZANDO EL ESTADO DEL CONTEO
-                                controlador.conteoEnviado(this, idConteo, funciones.getDateTime(), ajuste.toInt())
-
-                                dialogo.dismiss()
-                                regresarConteosList()
-                            }
-                        }
+                        dialogo.dismiss()
+                        verificarEnvio(ajuste.toInt())
                     }
                 }
             }
@@ -248,6 +250,25 @@ class ConteoInfo : AppCompatActivity() {
         dialogo.show()
     }
 
+    private fun verificarEnvio(ajuste: Int){
+        controlador.enviarDataConteoServer(this, idConteo, ajuste){ respuesta->
+            if(respuesta){
+                CoroutineScope(Dispatchers.IO).launch {
+                    withContext(Dispatchers.Main){
+                        mensaje.dialogoEnviado()
+                        delay(2000)
+                        //ACTUALIZANDO EL ESTADO DEL CONTEO
+                        controlador.conteoEnviado(this@ConteoInfo, idConteo, funciones.getDateTime(), ajuste.toInt())
+
+                        mensaje.dialogoCancelar()
+                        regresarConteosList()
+                    }
+                }
+            }
+        }
+    }
+
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         //super.onBackPressed()
     }

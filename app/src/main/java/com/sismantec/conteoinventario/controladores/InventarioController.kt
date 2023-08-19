@@ -19,6 +19,7 @@ import retrofit2.Response
 class InventarioController {
 
     private val funciones = Funciones()
+    private val conteoAuto = ConteoAutoController()
 
     //FUNCION PARA OBTENER BODEGAS
     fun obtenerBodegas(context: Context){
@@ -62,7 +63,7 @@ class InventarioController {
     }
 
     //FUNCION PARA OBTENER EL INVENTARIO
-    fun obtenerInventario(context: Context){
+    private fun obtenerInventario(context: Context){
         val db = funciones.getDataBase(context).writableDatabase
         val url = funciones.getServidor(funciones.getPreferences(context).ip, funciones.getPreferences(context).puerto)
 
@@ -151,7 +152,11 @@ class InventarioController {
         val consulta: String = if (query.isEmpty()){
             "SELECT * FROM inventario LIMIT 40"
         }else{
-            "SELECT * FROM inventario WHERE codigo='$query' OR Descripcion LIKE '%$query%'"
+            if(funciones.getPreferences(context).tipoConteo == "U"){
+                "SELECT * FROM inventario WHERE codigo='$query'"
+            }else{
+                "SELECT * FROM inventario WHERE codigo='$query' OR Descripcion LIKE '%$query%'"
+            }
         }
 
         try {
@@ -167,6 +172,14 @@ class InventarioController {
                     inventarioList.add(data)
                 }while (inventario.moveToNext())
                 inventario.close()
+
+                if(funciones.getPreferences(context).tipoConteo == "U"){
+                    var idInventario: Int = 0
+                    for(item in inventarioList){
+                        idInventario = item.id
+                    }
+
+                }
             }else{
              //SI NO HAY INVENTARIO EN DB
             }

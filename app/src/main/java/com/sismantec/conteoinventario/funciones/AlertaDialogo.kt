@@ -26,17 +26,18 @@ class AlertaDialogo(act: Activity) {
         dialogo.show()
     }
 
+    fun dialogoEnviado() {
+        val ale: AlertDialog.Builder = AlertDialog.Builder(actividad)
+        val ly: LayoutInflater = actividad.layoutInflater
+        ale.setView(ly.inflate(R.layout.alerta_enviado, null))
+        ale.setCancelable(false)
+        dialogo = ale.create()
+
+        dialogo.show()
+    }
+
     fun dialogoCancelar(){
         dialogo.dismiss()
     }
-
-    fun dialogoCambiarTexto(mensaje: String){
-        val texto = dialogo.findViewById<TextView>(R.id.txtCargandoData)
-        if(texto != null){
-            texto.text = mensaje
-        }
-    }
-
-
 
 }

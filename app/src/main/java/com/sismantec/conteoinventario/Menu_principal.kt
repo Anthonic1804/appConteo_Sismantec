@@ -44,41 +44,43 @@ class Menu_principal : AppCompatActivity() {
         super.onStart()
 
         binding.imgServer.setOnClickListener {
-            val intent = Intent(this@Menu_principal, MainActivity::class.java)
-            intent.putExtra("from", "menu")
-            startActivity(intent)
-            finish()
-
-            overridePendingTransition(R.anim.face_in, R.anim.face_out)
+            reconectar()
         }
 
         binding.nuevoConteo.setOnClickListener {
-            if(controlador.seleccionarInventarioSQLite(this@Menu_principal, "").isNotEmpty()){
-                val conteos = conteoController.obtenerConteoSQLite(this@Menu_principal)
-                if(conteos.isNotEmpty()){
-                    conteosList()
-                }else{
-                    nuevoConteo()
-                }
-            }else{
-                funciones.toastMensaje(this@Menu_principal, "NO SE HA CARGADO EL INVENTARIO", 0)
-            }
+            verificarInventario()
         }
 
         binding.loadInventario.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                if(funciones.isInternetReachable(this@Menu_principal)){
-                    controlador.obtenerBodegas(this@Menu_principal)
-                }else{
-                    runOnUiThread {
-                        funciones.toastMensaje(this@Menu_principal, "NO TIENES INTERNET", 0)
-                    }
-                }
-            }
+            cargarInventario()
         }
 
         binding.imgSalir.setOnClickListener {
             cerrarSesion()
+        }
+    }
+    private fun verificarInventario(){
+        if(controlador.seleccionarInventarioSQLite(this@Menu_principal, "").isNotEmpty()){
+            val conteos = conteoController.obtenerConteoSQLite(this@Menu_principal)
+            if(conteos.isNotEmpty()){
+                conteosList()
+            }else{
+                nuevoConteo()
+            }
+        }else{
+            funciones.toastMensaje(this@Menu_principal, "NO SE HA CARGADO EL INVENTARIO", 0)
+        }
+    }
+
+    private fun cargarInventario(){
+        CoroutineScope(Dispatchers.IO).launch {
+            if(funciones.isInternetReachable(this@Menu_principal)){
+                controlador.obtenerBodegas(this@Menu_principal)
+            }else{
+                runOnUiThread {
+                    funciones.toastMensaje(this@Menu_principal, "NO TIENES INTERNET", 0)
+                }
+            }
         }
     }
 
@@ -139,6 +141,15 @@ class Menu_principal : AppCompatActivity() {
 
     private fun conteosList(){
         val intent = Intent(this@Menu_principal, ConteosList::class.java)
+        startActivity(intent)
+        finish()
+
+        overridePendingTransition(R.anim.face_in, R.anim.face_out)
+    }
+
+    private fun reconectar(){
+        val intent = Intent(this@Menu_principal, MainActivity::class.java)
+        intent.putExtra("from", "menu")
         startActivity(intent)
         finish()
 

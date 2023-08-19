@@ -33,8 +33,12 @@ class InventarioList : AppCompatActivity(){
         if (result.contents == null) {
             funciones.toastMensaje(this, "LECTURA CANCELADA", 0)
         } else {
-            binding.svProductosList.setQuery(result.contents, false)
-            binding.svProductosList.findFocus()
+            if(funciones.getPreferences(this).tipoConteo.toString() == "U"){
+                 binding.svProductosList.setQuery(result.contents, true)
+            }else{
+                binding.svProductosList.setQuery(result.contents, false)
+                binding.svProductosList.findFocus()
+            }
         }
     }
 
@@ -43,8 +47,13 @@ class InventarioList : AppCompatActivity(){
         binding = ActivityInventarioListBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.svProductosList.findFocus()
-        binding.svProductosList.onActionViewExpanded()
+        if(funciones.getPreferences(this).tipoConteo == "U"){
+            binding.svProductosList.isEnabled = false
+            binding.svProductosList.onActionViewExpanded()
+        }else{
+            binding.svProductosList.findFocus()
+            binding.svProductosList.onActionViewExpanded()
+        }
     }
 
     override fun onStart() {
@@ -81,17 +90,15 @@ class InventarioList : AppCompatActivity(){
         binding.svProductosList.setOnQueryTextListener(object : SearchView.OnQueryTextListener,
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                if(funciones.getPreferences(this@InventarioList).tipoConteo == "U"){
+                    buscarProducto(query)
+                }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
-                CoroutineScope(Dispatchers.IO).launch {
-                    val lista: ArrayList<ResponseInventario> = inventario.seleccionarInventarioSQLite(this@InventarioList, "$newText")
-                    if(lista.isNotEmpty()){
-                        withContext(Dispatchers.Main){
-                            armarListaInventario(lista)
-                        }
-                    }
+                if(funciones.getPreferences(this@InventarioList).tipoConteo != "U"){
+                    buscarProducto(newText)
                 }
                 return false
             }
@@ -100,6 +107,19 @@ class InventarioList : AppCompatActivity(){
 
     }
 
+    //FUNCION DE BUSQUEDA DEL PRODUCTO
+    private fun buscarProducto(query: String?){
+        CoroutineScope(Dispatchers.IO).launch {
+            val lista: ArrayList<ResponseInventario> = inventario.seleccionarInventarioSQLite(this@InventarioList, "$query")
+            if(lista.isNotEmpty()){
+                withContext(Dispatchers.Main){
+                    armarListaInventario(lista)
+                }
+            }
+        }
+    }
+
+    //FUNCION PARA ARMAR LISTA DEL RECYVLERVIEW
     private fun armarListaInventario(lista: ArrayList<ResponseInventario>){
         val tipo = funciones.getPreferences(this@InventarioList).tipoConteo.toString()
         val mLayoutManager = LinearLayoutManager(this@InventarioList, LinearLayoutManager.VERTICAL, false)
@@ -123,7 +143,9 @@ class InventarioList : AppCompatActivity(){
             }
         }else{
             InventarioAdapter(lista, this@InventarioList){
-                //NO HACE NADA
+                //PRUEBA DE PRODUCTO AUTOMATICO
+                funciones.toastMensaje(this@InventarioList, "PRODUCTO CONTADO", 1)
+                buscarProducto("")
             }
         }
         binding.rvInventarioList.adapter = adapter
