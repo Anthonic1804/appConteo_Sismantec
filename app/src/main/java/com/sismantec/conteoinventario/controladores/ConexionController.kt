@@ -44,12 +44,42 @@ class ConexionController {
                 }
             } catch (e: Exception) {
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(context, "ERROR: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "ERROR DE CONEXION CON EL SERVIDOR", Toast.LENGTH_SHORT).show()
                 }
                 callback(false)
             }
         }
     }
 
+    //FUNCION PARA ELIMINAR LOS DATOS DE LA APP
+    fun eliminarDataApp(context: Context){
+        CoroutineScope(Dispatchers.IO).launch {
+            val db = funciones.getDataBase(context).writableDatabase
+            try {
+                db.beginTransaction()
+                db.execSQL("DELETE FROM bodegas")
+                db.execSQL("DELETE FROM inventario")
+                db.execSQL("DELETE FROM conteoInventario")
+                db.execSQL("DELETE FROM detalleConteo")
+
+                db.setTransactionSuccessful()
+                db.endTransaction()
+
+                val pref = context.getSharedPreferences("serverData", Context.MODE_PRIVATE)
+                val editor = pref.edit()
+                editor.remove("empleado")
+                editor.remove("idEmpleado")
+                editor.remove("esAdmin")
+                editor.remove("ip")
+                editor.remove("puerto")
+                editor.apply()
+
+            }catch (e: Exception){
+                throw Exception("ERROR AL ELIMINAR LA INFORMACION DE LA APP " + e.message)
+            }finally {
+                db.close()
+            }
+        }
+    }
 
 }

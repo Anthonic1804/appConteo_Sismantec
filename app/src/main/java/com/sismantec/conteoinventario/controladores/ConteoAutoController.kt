@@ -2,8 +2,6 @@ package com.sismantec.conteoinventario.controladores
 
 import android.content.Context
 import android.media.MediaPlayer
-import android.service.controls.Control
-import androidx.core.content.contentValuesOf
 import com.sismantec.conteoinventario.R
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.DetalleConteoJSON
@@ -47,7 +45,7 @@ class ConteoAutoController {
                     }
                     //FUNCION PARA BUSCAR EL PRODUCTO EN EL CONTEO
                     buscarProductoEnConteo(context, idConteo, idInventario)
-                }else{
+                } else {
                     val mediaPlayer: MediaPlayer? = MediaPlayer.create(context, R.raw.alerta)
                     mediaPlayer?.start()
                 }
@@ -65,8 +63,9 @@ class ConteoAutoController {
         val itemDetalle = ArrayList<DetalleConteoJSON>()
         var unidadesProducto: Int = 0
 
-        val consulta = "SELECT Id_inventario, Unidades, Fracciones FROM detalleConteo WHERE Id_inventario=${idInventario} " +
-                "AND Id_conteo_inventario=${idConteo}"
+        val consulta =
+            "SELECT Id_inventario, Unidades, Fracciones FROM detalleConteo WHERE Id_inventario=${idInventario} " +
+                    "AND Id_conteo_inventario=${idConteo}"
 
         CoroutineScope(Dispatchers.IO).launch {
             try {
@@ -87,10 +86,7 @@ class ConteoAutoController {
                         unidadesProducto = item.existencias.toInt()
                     }
 
-                    println("UNIDADES EN SQLITE: $unidadesProducto")
-
                     unidadesProducto += 1
-                    println("UNIDADES SUMADAS: $unidadesProducto")
 
                     //FUNCION PARA ACTUALIZAR LAS EXISTENCIAS DEL PRODUCTO
                     conteoManual.actualizarProductoConteo(

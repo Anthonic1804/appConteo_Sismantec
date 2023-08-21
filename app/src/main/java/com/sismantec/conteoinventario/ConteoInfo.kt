@@ -13,6 +13,7 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.sismantec.conteoinventario.adapter.InventarioEnConteoAdapter
 import com.sismantec.conteoinventario.controladores.ConteoController
+import com.sismantec.conteoinventario.controladores.ConteoManualController
 import com.sismantec.conteoinventario.databinding.ActivityConteoInfoBinding
 import com.sismantec.conteoinventario.funciones.AlertaDialogo
 import com.sismantec.conteoinventario.funciones.Funciones
@@ -29,6 +30,7 @@ class ConteoInfo : AppCompatActivity() {
     private var funciones = Funciones()
     private lateinit var adapter: InventarioEnConteoAdapter
     private var controlador = ConteoController()
+    private var conteoManual = ConteoManualController()
     private var idConteo: Int = 0
     private var estado: String = ""
     private var mensaje = AlertaDialogo(this)
@@ -41,7 +43,7 @@ class ConteoInfo : AppCompatActivity() {
         val prefs = funciones.getPreferences(this@ConteoInfo)
         binding.tvEmpleado.text = prefs.empleado
 
-        val tipo = when(prefs.tipoConteo){
+        val tipo = when (prefs.tipoConteo) {
             "U" -> "AUTOMÁTICO"
             else -> "MANUAL"
         }
@@ -53,8 +55,8 @@ class ConteoInfo : AppCompatActivity() {
         binding.tvUbicacion.text = ubicacion
         //****//
 
-        when(prefs.from){
-            "nuevoConteo"->{
+        when (prefs.from) {
+            "nuevoConteo" -> {
                 //DESHABILITANDO LOS BOTON ENVIAR Y HABILITAR
                 binding.btnEnviarConteo.visibility = View.GONE
                 binding.btnHabilitarConteo.visibility = View.GONE
@@ -63,18 +65,21 @@ class ConteoInfo : AppCompatActivity() {
                 binding.tvTipoConteo.text = tipo
                 binding.tvFechaInicio.text = funciones.getDateTime()
             }
+
             else -> {
                 estado = prefs.estado.toString()
-                when(estado){
-                    "HABILITADO"->{
+                when (estado) {
+                    "HABILITADO" -> {
                         binding.btnEnviarConteo.visibility = View.GONE
                         binding.btnHabilitarConteo.visibility = View.GONE
                     }
-                    "CERRADO"->{
+
+                    "CERRADO" -> {
                         binding.btnCerrarConteo.visibility = View.GONE
                         binding.btnAgregarProducto.visibility = View.GONE
                     }
-                    "ENVIADO"->{
+
+                    "ENVIADO" -> {
                         binding.btnCerrarConteo.visibility = View.GONE
                         binding.btnEnviarConteo.visibility = View.GONE
                         binding.btnAgregarProducto.visibility = View.GONE
@@ -93,8 +98,9 @@ class ConteoInfo : AppCompatActivity() {
         super.onStart()
 
         CoroutineScope(Dispatchers.IO).launch {
-            val lista: ArrayList<InventarioEnConteo> = controlador.obtenerInventarioEnConteo(idConteo,this@ConteoInfo)
-            if(lista.isNotEmpty()){
+            val lista: ArrayList<InventarioEnConteo> =
+                controlador.obtenerInventarioEnConteo(idConteo, this@ConteoInfo)
+            if (lista.isNotEmpty()) {
                 armarListaInventario(lista)
             }
         }
@@ -114,8 +120,8 @@ class ConteoInfo : AppCompatActivity() {
 
         binding.btnEnviarConteo.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                if(funciones.isInternetReachable(this@ConteoInfo)){
-                    withContext(Dispatchers.Main){
+                if (funciones.isInternetReachable(this@ConteoInfo)) {
+                    withContext(Dispatchers.Main) {
                         mensajeConteo("ENVIAR")
                     }
                 }
@@ -124,7 +130,7 @@ class ConteoInfo : AppCompatActivity() {
 
         binding.btnCerrarConteo.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     mensajeConteo("CERRAR")
                 }
             }
@@ -132,20 +138,20 @@ class ConteoInfo : AppCompatActivity() {
 
         binding.btnHabilitarConteo.setOnClickListener {
             CoroutineScope(Dispatchers.IO).launch {
-                withContext(Dispatchers.Main){
+                withContext(Dispatchers.Main) {
                     mensajeConteo("HABILITAR")
                 }
             }
         }
     }
 
-    private fun armarListaInventario(lista: ArrayList<InventarioEnConteo>){
+    private fun armarListaInventario(lista: ArrayList<InventarioEnConteo>) {
         val tipo = funciones.getPreferences(this).tipoConteo.toString()
         val mLayoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         binding.rvListadoProductosConteo.layoutManager = mLayoutManager
 
-        adapter = if(tipo == "F" && estado == "HABILITADO"){
-            InventarioEnConteoAdapter(lista, this){ position ->
+        adapter = if (tipo == "F" && estado == "HABILITADO") {
+            InventarioEnConteoAdapter(lista, this) { position ->
                 val data = lista[position]
                 val prefs = this.getSharedPreferences("serverData", MODE_PRIVATE)
                 val editor = prefs.edit()
@@ -163,15 +169,20 @@ class ConteoInfo : AppCompatActivity() {
 
                 overridePendingTransition(R.anim.face_in, R.anim.face_out)
             }
-        }else{
-            InventarioEnConteoAdapter(lista, this){
-                //NO HACE NADA
+        } else {
+            InventarioEnConteoAdapter(lista, this) {
+                if(tipo=="U" && estado == "HABILITADO"){
+                    //FUNCIONES PARA EL CONTEO AUTOMATICO
+                    //ELIMINAR EL PRODUCTO SELECCIONADO
+                    val data = lista[it]
+                    mensajeEliminar(funciones.getPreferences(this).idConteo.toString().toInt(), data.idInventario, data.descripcion)
+                }
             }
         }
         binding.rvListadoProductosConteo.adapter = adapter
     }
 
-    private fun regresarConteosList(){
+    private fun regresarConteosList() {
         val intent = Intent(this@ConteoInfo, ConteosList::class.java)
         startActivity(intent)
         finish()
@@ -179,7 +190,7 @@ class ConteoInfo : AppCompatActivity() {
         overridePendingTransition(R.anim.face_in, R.anim.face_out)
     }
 
-    private fun eliminarValoresdeConteoShared(){
+    private fun eliminarValoresdeConteoShared() {
         val prefs = this@ConteoInfo.getSharedPreferences("serverData", Context.MODE_PRIVATE)
         val editor = prefs.edit()
         editor.remove("from")
@@ -193,20 +204,22 @@ class ConteoInfo : AppCompatActivity() {
     }
 
     //FUNCION DIALOGO PARA ELIMINAR EL PRODUCTO
-    private fun mensajeConteo(tipo: String){
+    private fun mensajeConteo(tipo: String) {
         val dialogo = Dialog(this)
         dialogo.setCancelable(false)
         dialogo.setContentView(R.layout.alert_cerrar_sesion_usuario)
         dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.GONE
 
-        val texto = when(tipo){
+        val texto = when (tipo) {
             "CERRAR" -> {
                 "¿Desea Cerrar el Conteo?"
             }
+
             "HABILITAR" -> {
                 "¿Desea Habilitar el Conteo?"
             }
-            else->{
+
+            else -> {
                 dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.VISIBLE
                 dialogo.findViewById<Button>(R.id.btncerrar).text = "ENVIAR"
                 dialogo.findViewById<Button>(R.id.btncancelar).text = "SALIR"
@@ -218,24 +231,31 @@ class ConteoInfo : AppCompatActivity() {
         dialogo.findViewById<TextView>(R.id.txttitulo2).text = texto
 
         dialogo.findViewById<Button>(R.id.btncerrar).setOnClickListener {
-            when(tipo){
+            when (tipo) {
                 "CERRAR" -> {
                     controlador.cerrarConteo(this, idConteo)
                     funciones.toastMensaje(this, "CONTEO CERRADO CORRECTAMENTE", 1)
                     dialogo.dismiss()
                     regresarConteosList()
                 }
-                "HABILITAR"->{
+
+                "HABILITAR" -> {
                     controlador.habilitarConteo(this, idConteo)
                     funciones.toastMensaje(this, "CONTEO HABILITADO CORRECTAMENTE", 1)
                     dialogo.dismiss()
                     regresarConteosList()
                 }
-                else->{
-                    val ajuste = dialogo.findViewById<TextInputEditText>(R.id.txtAjuste).text.toString()
-                    if(ajuste.isEmpty() || ajuste.toInt() == 0){
-                        funciones.toastMensaje(this,"EL CAMPO ESTÁ VACIO O EL DATO ES INCORRECTO", 0)
-                    }else{
+
+                else -> {
+                    val ajuste =
+                        dialogo.findViewById<TextInputEditText>(R.id.txtAjuste).text.toString()
+                    if (ajuste.isEmpty() || ajuste.toInt() == 0) {
+                        funciones.toastMensaje(
+                            this,
+                            "EL CAMPO ESTÁ VACIO O EL DATO ES INCORRECTO",
+                            0
+                        )
+                    } else {
                         dialogo.dismiss()
                         verificarEnvio(ajuste.toInt())
                     }
@@ -250,15 +270,20 @@ class ConteoInfo : AppCompatActivity() {
         dialogo.show()
     }
 
-    private fun verificarEnvio(ajuste: Int){
-        controlador.enviarDataConteoServer(this, idConteo, ajuste){ respuesta->
-            if(respuesta){
+    private fun verificarEnvio(ajuste: Int) {
+        controlador.enviarDataConteoServer(this, idConteo, ajuste) { respuesta ->
+            if (respuesta) {
                 CoroutineScope(Dispatchers.IO).launch {
-                    withContext(Dispatchers.Main){
+                    withContext(Dispatchers.Main) {
                         mensaje.dialogoEnviado()
                         delay(2000)
                         //ACTUALIZANDO EL ESTADO DEL CONTEO
-                        controlador.conteoEnviado(this@ConteoInfo, idConteo, funciones.getDateTime(), ajuste.toInt())
+                        controlador.conteoEnviado(
+                            this@ConteoInfo,
+                            idConteo,
+                            funciones.getDateTime(),
+                            ajuste.toInt()
+                        )
 
                         mensaje.dialogoCancelar()
                         regresarConteosList()
@@ -266,6 +291,36 @@ class ConteoInfo : AppCompatActivity() {
                 }
             }
         }
+    }
+
+    //FUNCION DIALOGO PARA ELIMINAR EL PRODUCTO
+    private fun mensajeEliminar(idConteo: Int, idInventario: Int, producto: String) {
+        val dialogo = Dialog(this)
+        dialogo.setCancelable(false)
+        dialogo.setContentView(R.layout.alert_cerrar_sesion_usuario)
+        dialogo.findViewById<TextView>(R.id.txtsubtitulo).text = "INFORMACION"
+        dialogo.findViewById<TextView>(R.id.txttitulo2).text = "¿Desea Eliminar el Producto? \n ${producto}"
+        dialogo.findViewById<TextInputLayout>(R.id.lyAjuste).visibility = View.GONE
+
+        dialogo.findViewById<Button>(R.id.btncerrar).setOnClickListener {
+            conteoManual.eliminarProductoConteo(idConteo, idInventario, this)
+            funciones.toastMensaje(this, "PRODUCTO ELIMINADO", 1)
+            dialogo.dismiss()
+
+            val lista: ArrayList<InventarioEnConteo> =
+                controlador.obtenerInventarioEnConteo(idConteo, this@ConteoInfo)
+            if (lista.isNotEmpty()) {
+                armarListaInventario(lista)
+            }else{
+                binding.rvListadoProductosConteo.visibility = View.GONE
+            }
+        }
+
+        dialogo.findViewById<Button>(R.id.btncancelar).setOnClickListener {
+            dialogo.dismiss()
+        }
+
+        dialogo.show()
     }
 
     @Deprecated("Deprecated in Java")

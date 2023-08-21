@@ -10,7 +10,13 @@ import kotlinx.coroutines.launch
 class ConteoManualController {
     private var funciones = Funciones()
 
-    fun registrarProductoConteo(idConteo: Int, idInventario: Int, unidades: Int, fracciones: Int, context: Context){
+    fun registrarProductoConteo(
+        idConteo: Int,
+        idInventario: Int,
+        unidades: Int,
+        fracciones: Int,
+        context: Context
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val db = funciones.getDataBase(context).writableDatabase
             db.beginTransaction()
@@ -28,7 +34,13 @@ class ConteoManualController {
         }
     }
 
-    fun actualizarProductoConteo(idConteo: Int, idInventario: Int, unidades: Int, fracciones: Int, context: Context){
+    fun actualizarProductoConteo(
+        idConteo: Int,
+        idInventario: Int,
+        unidades: Int,
+        fracciones: Int,
+        context: Context
+    ) {
         CoroutineScope(Dispatchers.IO).launch {
             val db = funciones.getDataBase(context).writableDatabase
             db.beginTransaction()
@@ -36,7 +48,12 @@ class ConteoManualController {
             data.put("Unidades", unidades)
             data.put("Fracciones", fracciones)
 
-            db.update("detalleConteo", data, "Id_conteo_inventario=${idConteo} AND Id_inventario=${idInventario}", null)
+            db.update(
+                "detalleConteo",
+                data,
+                "Id_conteo_inventario=${idConteo} AND Id_inventario=${idInventario}",
+                null
+            )
 
             db.setTransactionSuccessful()
             db.endTransaction()
@@ -44,11 +61,15 @@ class ConteoManualController {
         }
     }
 
-    fun eliminarProductoConteo(idConteo: Int, idInventario: Int, context: Context){
+    fun eliminarProductoConteo(idConteo: Int, idInventario: Int, context: Context) {
         CoroutineScope(Dispatchers.IO).launch {
             val db = funciones.getDataBase(context).writableDatabase
             db.beginTransaction()
-            db.delete("detalleConteo", "Id_conteo_inventario=${idConteo} AND Id_inventario=${idInventario}", null)
+            db.delete(
+                "detalleConteo",
+                "Id_conteo_inventario=${idConteo} AND Id_inventario=${idInventario}",
+                null
+            )
             db.setTransactionSuccessful()
             db.endTransaction()
             db.close()
