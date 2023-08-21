@@ -3,7 +3,9 @@ package com.sismantec.conteoinventario.controladores
 import android.app.Activity
 import android.content.ContentValues
 import android.content.Context
+import android.media.MediaPlayer
 import android.widget.Toast
+import com.sismantec.conteoinventario.R
 import com.sismantec.conteoinventario.apiservices.APIService
 import com.sismantec.conteoinventario.funciones.AlertaDialogo
 import com.sismantec.conteoinventario.funciones.Funciones
@@ -19,7 +21,6 @@ import retrofit2.Response
 class InventarioController {
 
     private val funciones = Funciones()
-    private val conteoAuto = ConteoAutoController()
 
     //FUNCION PARA OBTENER BODEGAS
     fun obtenerBodegas(context: Context){
@@ -152,11 +153,7 @@ class InventarioController {
         val consulta: String = if (query.isEmpty()){
             "SELECT * FROM inventario LIMIT 40"
         }else{
-            if(funciones.getPreferences(context).tipoConteo == "U"){
-                "SELECT * FROM inventario WHERE codigo='$query'"
-            }else{
-                "SELECT * FROM inventario WHERE codigo='$query' OR Descripcion LIKE '%$query%'"
-            }
+            "SELECT * FROM inventario WHERE codigo='$query' OR Descripcion LIKE '%$query%'"
         }
 
         try {
@@ -172,23 +169,14 @@ class InventarioController {
                     inventarioList.add(data)
                 }while (inventario.moveToNext())
                 inventario.close()
-
-                if(funciones.getPreferences(context).tipoConteo == "U"){
-                    var idInventario: Int = 0
-                    for(item in inventarioList){
-                        idInventario = item.id
-                    }
-
-                }
             }else{
-             //SI NO HAY INVENTARIO EN DB
+                //NADA QUE HACER
             }
         }catch (e:Exception){
-            throw Exception(e.message)
+            throw Exception(e.message + "INVENTARIO CONTROLLER")
         }finally {
             db.close()
         }
         return inventarioList
     }
-
 }

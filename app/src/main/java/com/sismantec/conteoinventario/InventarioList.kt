@@ -10,12 +10,14 @@ import com.journeyapps.barcodescanner.ScanContract
 import com.journeyapps.barcodescanner.ScanIntentResult
 import com.journeyapps.barcodescanner.ScanOptions
 import com.sismantec.conteoinventario.adapter.InventarioAdapter
+import com.sismantec.conteoinventario.controladores.ConteoAutoController
 import com.sismantec.conteoinventario.controladores.InventarioController
 import com.sismantec.conteoinventario.databinding.ActivityInventarioListBinding
 import com.sismantec.conteoinventario.funciones.Funciones
 import com.sismantec.conteoinventario.modelos.ResponseInventario
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -24,6 +26,7 @@ class InventarioList : AppCompatActivity(){
 
     private lateinit var binding: ActivityInventarioListBinding
     private var inventario = InventarioController()
+    private var conteoAuto = ConteoAutoController()
     private var funciones = Funciones()
     private lateinit var adapter: InventarioAdapter
 
@@ -76,6 +79,7 @@ class InventarioList : AppCompatActivity(){
             overridePendingTransition(R.anim.face_in, R.anim.face_out)
         }
 
+        //IMAGEN DEL LECTOR DE CODIGO DE BARRA
         binding.imgBarra.setOnClickListener {
             val options = ScanOptions()
             options.setDesiredBarcodeFormats(ScanOptions.ONE_D_CODE_TYPES)
@@ -91,14 +95,14 @@ class InventarioList : AppCompatActivity(){
             androidx.appcompat.widget.SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 if(funciones.getPreferences(this@InventarioList).tipoConteo == "U"){
-                    buscarProducto(query)
+                    buscarProductoAuto(query)
                 }
                 return false
             }
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 if(funciones.getPreferences(this@InventarioList).tipoConteo != "U"){
-                    buscarProducto(newText)
+                    buscarProductoManual(newText)
                 }
                 return false
             }
@@ -107,13 +111,28 @@ class InventarioList : AppCompatActivity(){
 
     }
 
-    //FUNCION DE BUSQUEDA DEL PRODUCTO
-    private fun buscarProducto(query: String?){
+    //FUNCION DE BUSQUEDA DEL PRODUCTO MANUAL
+    private fun buscarProductoManual(query: String?){
         CoroutineScope(Dispatchers.IO).launch {
             val lista: ArrayList<ResponseInventario> = inventario.seleccionarInventarioSQLite(this@InventarioList, "$query")
             if(lista.isNotEmpty()){
                 withContext(Dispatchers.Main){
                     armarListaInventario(lista)
+                }
+            }
+        }
+    }
+
+    //FUNCION BUSCAR PRODUCTO AUTOMATICO
+    private fun buscarProductoAuto(query: String?){
+        val idConteo = funciones.getPreferences(this@InventarioList).idConteo.toString().toInt()
+        CoroutineScope(Dispatchers.IO).launch {
+            val lista: ArrayList<ResponseInventario> = conteoAuto.buscarProductoEnInventario(this@InventarioList, query, idConteo)
+            if(lista.isNotEmpty()){
+                withContext(Dispatchers.Main){
+                    armarListaInventario(lista)
+                    delay(1500)
+                    binding.svProductosList.setQuery("", false)
                 }
             }
         }
@@ -143,9 +162,7 @@ class InventarioList : AppCompatActivity(){
             }
         }else{
             InventarioAdapter(lista, this@InventarioList){
-                //PRUEBA DE PRODUCTO AUTOMATICO
-                funciones.toastMensaje(this@InventarioList, "PRODUCTO CONTADO", 1)
-                buscarProducto("")
+
             }
         }
         binding.rvInventarioList.adapter = adapter
