@@ -39,6 +39,7 @@ class Nuevo_conteo : AppCompatActivity() {
 
         if(inventarioController.seleccionarBodegasSQLite(this@Nuevo_conteo).count() == 1){
             binding.lyBodegas.visibility = View.GONE
+            binding.btnIniciar.isEnabled = true
         }else{
             binding.lyUbicacion.visibility = View.GONE
         }
