@@ -121,6 +121,7 @@ class InventarioList : AppCompatActivity(){
                 }
             }
         }
+        binding.svProductosList.setQuery("", false)
     }
 
     //FUNCION BUSCAR PRODUCTO AUTOMATICO
@@ -131,11 +132,10 @@ class InventarioList : AppCompatActivity(){
             if(lista.isNotEmpty()){
                 withContext(Dispatchers.Main){
                     armarListaInventario(lista)
-                    delay(1500)
-                    binding.svProductosList.setQuery("", false)
                 }
             }
         }
+        binding.svProductosList.setQuery("", false)
     }
 
     //FUNCION PARA ARMAR LISTA DEL RECYVLERVIEW
