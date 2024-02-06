@@ -121,7 +121,7 @@ class InventarioList : AppCompatActivity(){
                 }
             }
         }
-        binding.svProductosList.setQuery("", false)
+       // binding.svProductosList.setQuery("", false)
     }
 
     //FUNCION BUSCAR PRODUCTO AUTOMATICO
